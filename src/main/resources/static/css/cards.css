@@ -1,56 +1,86 @@
 /* ---------- карточки курсов ---------- */
-.ss-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.ss-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
 
 .ss-course {
+  position: relative;
   border-radius: var(--r-lg);
   padding: 1.5px;
-  background: linear-gradient(140deg, var(--acc1, #FFD93D), var(--acc2, #FF8C42));
+  background: var(--edge);
   box-shadow: var(--shadow);
-  transition: box-shadow .25s ease;
-  transform-style: preserve-3d;
+  transition: box-shadow .45s var(--ease-out);
   will-change: transform;
 }
-.ss-course:hover { box-shadow: 0 20px 46px rgba(27, 42, 74, .20); }
+/* подсветка рамки, которая идёт за курсором (--mx / --my выставляет main.js) */
+.ss-course::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 0%), var(--acc1, #FFD54A), var(--acc2, #F5853A) 45%, transparent 78%);
+  opacity: 0;
+  transition: opacity .45s ease;
+}
+.ss-course:hover { box-shadow: var(--shadow-lift); }
+.ss-course:hover::before, .ss-course:focus-within::before { opacity: 1; }
+
 .ss-course__inner {
+  position: relative;
+  overflow: hidden;
   background: var(--surface);
-  border-radius: 21px;
-  padding: 20px;
+  border-radius: calc(var(--r-lg) - 1.5px);
+  padding: 22px;
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+.ss-course__inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--acc2, #F5853A), transparent 62%);
+  opacity: 0;
+  transition: opacity .45s ease;
+  pointer-events: none;
+}
+.ss-course:hover .ss-course__inner::after { opacity: .09; }
+.ss-course__inner > * { position: relative; z-index: 1; }
+
 .ss-course__chip {
   width: 46px; height: 46px;
-  border-radius: 14px;
+  border-radius: 15px;
   display: grid;
   place-items: center;
   color: #fff;
   font-size: 22px;
-  background: linear-gradient(140deg, var(--acc1, #FFD93D), var(--acc2, #FF8C42));
+  background: linear-gradient(140deg, var(--acc1, #FFD54A), var(--acc2, #F5853A));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 8px 16px -8px var(--acc2, #F5853A);
+  transition: transform .5s var(--ease-spring);
 }
+.ss-course:hover .ss-course__chip { transform: rotate(-8deg) scale(1.06); }
 .ss-course small {
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 11.5px;
   font-family: var(--font-head);
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
-.ss-course h3 { margin: 0; font-weight: 800; font-size: 18px; }
+.ss-course h3 { margin: 0; font-weight: 700; font-size: 19px; }
 .ss-course h3 a { color: var(--ink); text-decoration: none; }
 .ss-course h3 a:hover { color: var(--sun-3); }
-.ss-course p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.ss-course p { margin: 0; font-size: 14px; color: var(--ink-soft); }
 .ss-course__foot {
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
 }
 
 /* акценты рассвета */
-.ss-acc--sun   { --acc1: #FFD93D; --acc2: #FF8C42; }
-.ss-acc--sky   { --acc1: #223A6D; --acc2: #4A5D9E; }
-.ss-acc--ember { --acc1: #FF8C42; --acc2: #E2543F; }
+.ss-acc--sun   { --acc1: #FFD54A; --acc2: #F5853A; }
+.ss-acc--sky   { --acc1: #4A5D9E; --acc2: #223A6D; }
+.ss-acc--ember { --acc1: #F5853A; --acc2: #D94F3B; }

@@ -4,6 +4,9 @@
   display: grid;
   place-items: center;
   padding: 50px 20px;
+  background:
+    radial-gradient(520px circle at 50% 108%, rgba(255, 179, 71, .30), transparent 70%),
+    radial-gradient(900px circle at 50% 120%, rgba(245, 133, 58, .12), transparent 70%);
 }
 .ss-auth__card {
   width: 100%;
@@ -11,8 +14,8 @@
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow);
-  padding: 34px 30px;
+  box-shadow: var(--shadow-lift);
+  padding: 38px 32px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -24,8 +27,8 @@
   height: 5px;
   background: var(--grad-sun);
 }
-.ss-auth__sun { margin: 0 auto 14px; display: block; }
-.ss-auth__card h1 { margin: 0 0 6px; font-weight: 800; font-size: 24px; }
+.ss-auth__sun { margin: 0 auto 14px; display: block; color: var(--ink) !important; }
+.ss-auth__card h1 { margin: 0 0 8px; font-weight: 600; font-size: 22px; }
 .ss-auth__card .ss-mut { margin-bottom: 22px; }
 .ss-auth__card form { text-align: left; }
 .ss-auth__links { margin-top: 18px; font-size: 13px; }

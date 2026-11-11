@@ -7,40 +7,63 @@
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 999px;
   padding: 10px 20px;
   cursor: pointer;
   font-family: var(--font-head);
   font-weight: 700;
   font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -.005em;
   color: var(--ink);
   background: var(--surface-2);
   text-decoration: none;
-  transition: transform .18s cubic-bezier(.34, 1.56, .64, 1), box-shadow .18s ease, background .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), background .25s ease, border-color .25s ease, color .25s ease;
 }
-.ss-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 20px rgba(255, 140, 66, .28); color: var(--ink); }
-.ss-btn:active { transform: scale(.96); }
+.ss-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -10px rgba(245, 133, 58, .55); color: var(--ink); }
+.ss-btn:active { transform: translateY(0) scale(.97); transition-duration: .08s; }
 .ss-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+.ss-btn svg { flex: none; transition: transform .35s var(--ease-out); }
+.ss-btn:hover .ss-btn__arrow { transform: translateX(4px); }
 
-.ss-btn--primary { background: var(--grad-sun); color: #3A2A00; box-shadow: 0 6px 18px rgba(255, 140, 66, .35); }
-.ss-btn--primary:hover { box-shadow: 0 12px 28px rgba(255, 140, 66, .5); color: #3A2A00; }
-.ss-btn--outline { background: transparent; border-color: var(--sun-3); color: var(--sun-3); }
-.ss-btn--outline:hover { background: rgba(255, 140, 66, .09); }
+.ss-btn--primary {
+  background: var(--grad-sun);
+  color: #3A2A00;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(160, 80, 0, .18), 0 8px 20px -8px rgba(245, 133, 58, .7);
+}
+.ss-btn--primary:hover {
+  color: #3A2A00;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -1px 0 rgba(160, 80, 0, .18), 0 16px 30px -10px rgba(245, 133, 58, .8);
+}
+.ss-btn--outline { background: transparent; border-color: var(--edge); color: var(--ink); }
+.ss-btn--outline:hover { border-color: var(--sun-3); background: rgba(245, 133, 58, .07); box-shadow: none; }
 .ss-btn--ghost { background: transparent; color: var(--ink-soft); }
 .ss-btn--ghost:hover { background: var(--surface-2); box-shadow: none; }
-.ss-btn--danger { background: #E2543F; color: #fff; }
-.ss-btn--danger:hover { box-shadow: 0 8px 20px rgba(226, 84, 63, .4); color: #fff; }
-.ss-btn--glass { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .55); color: #fff; backdrop-filter: blur(4px); }
-.ss-btn--glass:hover { color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, .2); }
-.ss-btn--sm { padding: 7px 14px; font-size: 13px; border-radius: 10px; }
-.ss-btn--lg { padding: 13px 26px; font-size: 15px; border-radius: 14px; }
+.ss-btn--danger { background: #D94F3B; color: #fff; }
+.ss-btn--danger:hover { box-shadow: 0 10px 22px -10px rgba(217, 79, 59, .7); color: #fff; }
+.ss-btn--glass {
+  background: rgba(255, 255, 255, .13);
+  border-color: rgba(255, 255, 255, .4);
+  color: #fff;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.ss-btn--glass:hover { color: #fff; background: rgba(255, 255, 255, .2); box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .45); }
+.ss-btn--dark { background: var(--sky-1); color: #FFF6E4; }
+.ss-btn--dark:hover { color: #fff; box-shadow: 0 14px 28px -12px rgba(23, 34, 63, .6); }
+.ss-btn--sm { padding: 7px 15px; font-size: 13px; }
+.ss-btn--lg { padding: 15px 28px; font-size: 15.5px; }
+
+/* «магнитные» кнопки: трансформом управляет GSAP */
+.ss-btn.ss-magnetic { transition: box-shadow .35s var(--ease-out), background .25s ease; will-change: transform; }
 
 .ss-ripple {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .5);
   transform: scale(0);
   animation: ss-ripple .6s ease-out forwards;
   pointer-events: none;
 }
-.ss-btn--outline .ss-ripple, .ss-btn--ghost .ss-ripple { background: rgba(255, 140, 66, .25); }
+.ss-btn--outline .ss-ripple, .ss-btn--ghost .ss-ripple { background: rgba(245, 133, 58, .22); }
