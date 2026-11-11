@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Домашнее задание')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:640px">
+  <p class="ss-kicker ss-reveal" th:text="|${lesson.course.title} · урок ${lesson.position}|">Курс</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Домашнее задание</h1>
+  <p class="ss-hint ss-reveal">Ученики сдают текст или файл, ты ставишь баллы и пишешь комментарий.</p>
+
+  <form class="ss-card ss-reveal" th:action="@{'/teacher/lessons/' + ${lesson.id} + '/homework'}"
+        th:object="${form}" method="post">
+    <div th:replace="~{fragments/logo :: csrf}"></div>
+
+    <div class="ss-field">
+      <label for="title">Название *</label>
+      <input class="ss-input" id="title" type="text" th:field="*{title}" required
+             placeholder="Например: Построить графики функций">
+    </div>
+
+    <div class="ss-field">
+      <label for="instruction">Инструкция для учеников</label>
+      <textarea class="ss-textarea" id="instruction" th:field="*{instruction}"
+                placeholder="Что нужно сделать, в каком виде сдать…"></textarea>
+    </div>
+
+    <div class="ss-row">
+      <div class="ss-field" style="flex:1">
+        <label for="maxPoints">Максимум баллов</label>
+        <input class="ss-input" id="maxPoints" type="number" min="1" max="100" th:field="*{maxPoints}">
+      </div>
+      <div class="ss-field" style="flex:1">
+        <label for="deadline">Дедлайн</label>
+        <input class="ss-input" id="deadline" type="datetime-local" th:field="*{deadline}"
+               th:value="${form.deadline != null} ? ${T(ru.schoolsun.common.Dates).iso(form.deadline)} : ''">
+      </div>
+    </div>
+
+    <div class="ss-actions">
+      <button class="ss-btn ss-btn--primary" type="submit">
+        <i data-lucide="save" aria-hidden="true"></i> Сохранить задание
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{'/teacher/lessons/' + ${lesson.id}}">К уроку</a>
+    </div>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

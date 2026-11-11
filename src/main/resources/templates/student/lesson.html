@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head(${lesson.title})}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('student')}"></header>
+
+<main class="ss-section">
+  <p class="ss-kicker ss-reveal" th:text="${course.title}">Курс</p>
+  <div class="ss-reveal" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+    <h1 style="margin:0;font-size:28px">
+      <span class="ss-mut" th:text="|${lesson.position}.|">1.</span>
+      <span th:text="${lesson.title}">Урок</span>
+    </h1>
+    <span class="ss-badge ss-badge--ok" th:if="${completed}"><i></i>Пройден</span>
+    <span class="ss-badge ss-badge--warn" th:if="${!lesson.published}"><i></i>Черновик</span>
+  </div>
+
+  <div class="ss-progressbox ss-reveal" style="max-width:420px;margin-bottom:28px">
+    <small th:text="|Прогресс курса: ${percent}%|">Прогресс</small>
+    <div class="ss-progress"><i th:attr="data-val=${percent}"></i></div>
+  </div>
+
+  <div class="ss-lesson-layout">
+    <aside class="ss-lesson-nav ss-reveal">
+      <p class="ss-kicker" style="margin:0 14px 10px">Уроки курса</p>
+      <a th:each="l : ${allLessons}"
+         th:href="${openableIds.contains(l.id)} ? @{'/student/lessons/' + ${l.id}} : 'javascript:void(0)'"
+         th:class="${l.id == lesson.id} ? current : (${openableIds.contains(l.id)} ? '' : locked)">
+        <i data-lucide="check-circle-2" aria-hidden="true" th:if="${l.id != lesson.id && completedIds.contains(l.id)}"></i>
+        <i data-lucide="lock" aria-hidden="true" th:if="${l.id != lesson.id && !completedIds.contains(l.id) && !openableIds.contains(l.id)}"></i>
+        <span th:text="|${l.position}. ${l.title}|">Урок</span>
+      </a>
+      <a th:href="@{'/courses/' + ${course.slug}}" style="margin-top:10px">← К странице курса</a>
+    </aside>
+
+    <div>
+      <article class="ss-card ss-reveal">
+        <div class="ss-prose" th:utext="${theoryHtml}">Теория урока</div>
+
+        <iframe class="ss-video" th:if="${embed != null}" th:src="${embed}"
+                title="Видео урока" allowfullscreen></iframe>
+
+        <div th:if="${!#lists.isEmpty(attachments)}" style="margin-top:18px">
+          <p class="ss-kicker" style="margin-bottom:8px">Материалы урока</p>
+          <div class="ss-rowcard" th:each="a : ${attachments}">
+            <i data-lucide="paperclip" aria-hidden="true" style="color:var(--sun-3)"></i>
+            <div style="flex:1">
+              <b th:text="${a.originalName}">файл.pdf</b>
+            </div>
+            <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/files/attachment/' + ${a.id}}">
+              Скачать
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Тест -->
+      <section class="ss-card ss-reveal" th:if="${quiz != null}" style="margin-top:20px"
+               th:classappend="|ss-acc--${course.accent}|">
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <div class="ss-course__chip"><i data-lucide="zap" aria-hidden="true"></i></div>
+          <div style="flex:1;min-width:200px">
+            <h3 style="margin:0" th:text="${quiz.title}">Тест</h3>
+            <p class="ss-tiny" style="margin:2px 0 0">
+              <span th:text="|${quizRows.size()} вопросов|">вопросов</span> ·
+              максимум <span th:text="${quiz.maxAttempts}">3</span> попыток
+              <span th:if="${quiz.timeLimitSec != null}" th:text="· ограничение времени"></span>
+            </p>
+          </div>
+          <div>
+            <span class="ss-badge ss-badge--ok" th:if="${bestScore >= quizTotal && quizTotal > 0}">
+              <i></i>Сдано на максимум
+            </span>
+            <span class="ss-tiny" th:if="${quizTotal > 0 && bestScore < quizTotal}"
+                  th:text="|Лучший результат: ${bestScore}/${quizTotal} · попыток осталось: ${quiz.maxAttempts - attemptsUsed}|">
+            </span>
+          </div>
+          <a class="ss-btn ss-btn--primary"
+             th:href="@{'/student/quiz/' + ${quiz.id}}"
+             th:if="${attemptsUsed < quiz.maxAttempts}">Пройти тест</a>
+        </div>
+      </section>
+
+      <!-- Домашнее задание -->
+      <section class="ss-card ss-reveal" th:if="${homework != null}" style="margin-top:20px">
+        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+          <div class="ss-course__chip ss-acc--sky"><i data-lucide="pencil-line" aria-hidden="true"></i></div>
+          <div style="flex:1;min-width:220px">
+            <h3 style="margin:0 0 4px" th:text="${homework.title}">Домашнее задание</h3>
+            <p class="ss-mut" style="margin:0 0 8px" th:text="${homework.instruction}">Инструкция</p>
+            <p class="ss-tiny" style="margin:0" th:if="${homework.deadline != null}"
+               th:text="|Сдать до: ${T(ru.schoolsun.common.Dates).fmt(homework.deadline)} · максимум ${homework.maxPoints} баллов|">
+            </p>
+          </div>
+          <div th:if="${submission != null}">
+            <span class="ss-badge ss-badge--info" th:if="${submission.status.name() == 'SUBMITTED'}"><i></i>Сдано — на проверке</span>
+            <span class="ss-badge ss-badge--warn" th:if="${submission.status.name() == 'REVISION'}"><i></i>На доработку</span>
+            <span class="ss-badge ss-badge--ok" th:if="${submission.status.name() == 'ACCEPTED'}">
+              <i></i>Принято <span th:if="${submission.score != null}" th:text="|· ${submission.score}/${homework.maxPoints}|"></span>
+            </span>
+          </div>
+        </div>
+
+        <div th:if="${submission != null && submission.feedback != null}"
+             class="ss-prose" style="margin-top:14px;padding:12px 16px;background:var(--surface-2);border-radius:12px">
+          <b>Комментарий учителя:</b>
+          <p style="margin:6px 0 0" th:text="${submission.feedback}">Комментарий</p>
+        </div>
+
+        <div th:if="${submission != null && submission.originalName != null}" class="ss-rowcard" style="margin-top:12px">
+          <i data-lucide="file-text" aria-hidden="true" style="color:var(--sun-3)"></i>
+          <span style="flex:1" th:text="${submission.originalName}">моя-работа.pdf</span>
+          <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/files/homework/' + ${submission.id}}">Скачать</a>
+        </div>
+
+        <form th:if="${submission == null || submission.status.name() == 'REVISION'}"
+              th:action="@{'/student/lessons/' + ${lesson.id} + '/homework'}" method="post"
+              enctype="multipart/form-data" style="margin-top:16px">
+          <div th:replace="~{fragments/logo :: csrf}"></div>
+          <div class="ss-field">
+            <label for="textAnswer">Ответ текстом</label>
+            <textarea class="ss-textarea" id="textAnswer" name="textAnswer"
+                      placeholder="Напиши решение или ответ здесь…"></textarea>
+          </div>
+          <div class="ss-field">
+            <label for="file">Или приложи файл (до 10 МБ)</label>
+            <input class="ss-input" id="file" type="file" name="file">
+          </div>
+          <button class="ss-btn ss-btn--primary" type="submit">
+            <i data-lucide="send" aria-hidden="true"></i>
+            <span th:if="${submission == null}">Сдать домашнюю работу</span>
+            <span th:if="${submission != null}">Отправить на доработку</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Завершение урока -->
+      <div class="ss-card ss-reveal" style="margin-top:20px;text-align:center" th:if="${!completed && quiz == null && homework == null}">
+        <h3 style="margin:0 0 8px">Осилил урок?</h3>
+        <p class="ss-mut" style="margin:0 0 14px">Отметь его пройденным — и двигайся дальше к солнцу.</p>
+        <form th:action="@{'/student/lessons/' + ${lesson.id} + '/complete'}" method="post">
+          <div th:replace="~{fragments/logo :: csrf}"></div>
+          <button class="ss-btn ss-btn--primary" type="submit">
+            <i data-lucide="check-circle-2" aria-hidden="true"></i> Отметить пройденным
+          </button>
+        </form>
+      </div>
+
+      <div class="ss-lesson-bar">
+        <a class="ss-btn ss-btn--ghost" th:if="${prev != null}" th:href="@{'/student/lessons/' + ${prev.id}}">
+          ← <span th:text="${prev.title}">Предыдущий</span>
+        </a>
+        <span th:if="${prev == null}"></span>
+        <a class="ss-btn ss-btn--primary" th:if="${next != null}" th:href="@{'/student/lessons/' + ${next.id}}">
+          Дальше: <span th:text="${next.title}">Следующий</span> →
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

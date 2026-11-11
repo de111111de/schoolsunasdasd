@@ -1,0 +1,56 @@
+/* ---------- карточки курсов ---------- */
+.ss-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+
+.ss-course {
+  border-radius: var(--r-lg);
+  padding: 1.5px;
+  background: linear-gradient(140deg, var(--acc1, #FFD93D), var(--acc2, #FF8C42));
+  box-shadow: var(--shadow);
+  transition: box-shadow .25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.ss-course:hover { box-shadow: 0 20px 46px rgba(27, 42, 74, .20); }
+.ss-course__inner {
+  background: var(--surface);
+  border-radius: 21px;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ss-course__chip {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 22px;
+  background: linear-gradient(140deg, var(--acc1, #FFD93D), var(--acc2, #FF8C42));
+}
+.ss-course small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.ss-course h3 { margin: 0; font-weight: 800; font-size: 18px; }
+.ss-course h3 a { color: var(--ink); text-decoration: none; }
+.ss-course h3 a:hover { color: var(--sun-3); }
+.ss-course p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.ss-course__foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+/* акценты рассвета */
+.ss-acc--sun   { --acc1: #FFD93D; --acc2: #FF8C42; }
+.ss-acc--sky   { --acc1: #223A6D; --acc2: #4A5D9E; }
+.ss-acc--ember { --acc1: #FF8C42; --acc2: #E2543F; }

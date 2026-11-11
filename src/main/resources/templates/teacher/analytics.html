@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Аналитика')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section">
+  <p class="ss-kicker ss-reveal" th:text="${course.title}">Курс</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Аналитика курса</h1>
+
+  <div class="ss-counters ss-reveal" style="margin:20px 0 30px">
+    <div class="ss-counter"><b data-target="${analytics.studentsCount}">0</b><small>учеников на курсе</small></div>
+    <div class="ss-counter"><b data-target="${#lists.size(analytics.lessons)}">0</b><small>уроков</small></div>
+    <div class="ss-counter"><b data-target="${#lists.size(analytics.hardest)}">0</b><small>вопросов в топе сложных</small></div>
+  </div>
+
+  <section class="ss-reveal" style="margin-bottom:34px">
+    <p class="ss-kicker">По урокам</p>
+    <div class="ss-card ss-tablewrap">
+      <table class="ss-table">
+        <thead>
+        <tr><th>Урок</th><th>Средний тест</th><th>Попыток</th><th>Сдач домашки</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="ls : ${analytics.lessons}">
+          <td><b th:text="${ls.title}">Урок</b></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;min-width:170px">
+              <div class="ss-progress" style="flex:1;min-width:80px">
+                <i th:attr="data-val=${ls.avgQuizPercent != null ? ls.avgQuizPercent : 0}"></i>
+              </div>
+              <span class="ss-num ss-tiny" th:if="${ls.avgQuizPercent != null}"
+                    th:text="|${#numbers.formatDecimal(ls.avgQuizPercent, 1, 0)}%|">—</span>
+              <span class="ss-num ss-tiny" th:if="${ls.avgQuizPercent == null}">—</span>
+            </div>
+          </td>
+          <td class="ss-num" th:text="${ls.attemptsCount}">0</td>
+          <td class="ss-num" th:text="${ls.submissionsCount}">0</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ss-reveal">
+    <p class="ss-kicker">Самые сложные вопросы</p>
+    <p class="ss-hint">Наименьший процент правильных ответов по попыткам учеников.</p>
+    <div class="ss-card ss-tablewrap" th:if="${!#lists.isEmpty(analytics.hardest)}">
+      <table class="ss-table">
+        <thead>
+        <tr><th>Вопрос</th><th>Урок</th><th>Верно</th><th>Ответов</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="q : ${analytics.hardest}">
+          <td style="max-width:340px" th:text="${#strings.abbreviate(q.questionText, 90)}">Вопрос</td>
+          <td class="ss-tiny" th:text="${q.lessonTitle}">Урок</td>
+          <td>
+            <span class="ss-badge"
+                  th:classappend="${q.correctRate < 40} ? ss-badge--danger : (${q.correctRate < 70} ? ss-badge--warn : ss-badge--ok)">
+              <i></i><span th:text="|${#numbers.formatDecimal(q.correctRate, 1, 0)}%|">0%</span>
+            </span>
+          </td>
+          <td class="ss-num" th:text="${q.answersCount}">0</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ss-empty" th:if="${#lists.isEmpty(analytics.hardest)}">
+      <p>Пока нет попыток тестов — данных недостаточно.</p>
+    </div>
+  </section>
+
+  <p style="margin-top:24px" class="ss-reveal">
+    <a class="ss-btn ss-btn--ghost" th:href="@{'/teacher/courses/' + ${course.id}}">← К управлению курсом</a>
+  </p>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

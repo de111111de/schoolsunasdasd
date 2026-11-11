@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Вход')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <svg class="ss-auth__sun" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="color:#1B2A4A">
+      <g class="ss-logo__rays" stroke="#FFB347" stroke-width="3.4" stroke-linecap="round">
+        <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
+        <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
+        <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
+        <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
+      </g>
+      <circle cx="32" cy="26" r="11" fill="#FFD93D"/>
+      <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="currentColor"/>
+    </svg>
+    <h1>С возвращением!</h1>
+    <p class="ss-mut">Войди, чтобы продолжить учиться на рассвете</p>
+
+    <div class="ss-error" role="alert" th:if="${error}" th:text="${error}">Ошибка</div>
+    <div class="ss-info" th:if="${info}" th:text="${info}">Инфо</div>
+
+    <form th:action="@{/login}" method="post">
+      <div th:replace="~{fragments/logo :: csrf}"></div>
+      <input type="hidden" name="next" th:value="${param.next}">
+      <div class="ss-field">
+        <label for="username">Email</label>
+        <input class="ss-input" id="username" type="email" name="username" required
+               placeholder="solntse@schoolsun.ru" autocomplete="username">
+      </div>
+      <div class="ss-field">
+        <label for="password">Пароль</label>
+        <input class="ss-input" id="password" type="password" name="password" required
+               placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit" style="width:100%">Войти</button>
+    </form>
+
+    <div class="ss-auth__links">
+      <p style="margin:0 0 6px"><a th:href="@{/forgot-password}">Забыли пароль?</a></p>
+      <p style="margin:0">Нет аккаунта? <a th:href="@{/register}">Зарегистрируйся</a></p>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

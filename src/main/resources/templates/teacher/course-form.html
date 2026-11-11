@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Новый курс')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:640px">
+  <p class="ss-kicker ss-reveal">Панель учителя</p>
+  <h1 class="ss-reveal" th:if="${isNew}" style="font-size:28px;margin-bottom:6px">Новый курс</h1>
+  <h1 class="ss-reveal" th:if="${!isNew}" style="font-size:28px;margin-bottom:6px">Редактирование курса</h1>
+  <p class="ss-hint ss-reveal">Название, описание и настройки видимости.</p>
+
+  <form class="ss-card ss-reveal" th:action="${isNew} ? @{/teacher/courses} : @{'/teacher/courses/' + ${course.id}}"
+        th:object="${form}" method="post">
+    <div th:replace="~{fragments/logo :: csrf}"></div>
+
+    <div class="ss-field">
+      <label for="title">Название курса *</label>
+      <input class="ss-input" id="title" type="text" th:field="*{title}" required
+             placeholder="Например: Алгебра: от функций к олимпиадам">
+    </div>
+
+    <div class="ss-field">
+      <label for="description">Описание (показывается в каталоге)</label>
+      <textarea class="ss-textarea" id="description" th:field="*{description}"
+                placeholder="Пара предложений: для кого курс и чему научится ученик"></textarea>
+    </div>
+
+    <div class="ss-row">
+      <div class="ss-field" style="flex:1">
+        <label for="subject">Предмет</label>
+        <select class="ss-select" id="subject" th:field="*{subject}">
+          <option th:each="s : ${T(ru.schoolsun.course.Subject).values()}" th:value="${s.name()}" th:text="${s.label}">
+            Предмет
+          </option>
+        </select>
+      </div>
+      <div class="ss-field" style="flex:1">
+        <label for="grade">Класс</label>
+        <select class="ss-select" id="grade" th:field="*{grade}">
+          <option th:each="g : ${#numbers.sequence(5, 11)}" th:value="${g}" th:text="|${g} класс|">Класс</option>
+        </select>
+      </div>
+      <div class="ss-field" style="flex:1">
+        <label for="accent">Цвет карточки</label>
+        <select class="ss-select" id="accent" th:field="*{accent}">
+          <option value="sun">Солнце (жёлто-оранжевый)</option>
+          <option value="sky">Небо (синий)</option>
+          <option value="ember">Закат (красно-оранжевый)</option>
+        </select>
+      </div>
+    </div>
+
+    <label class="ss-check">
+      <input type="checkbox" th:field="*{sequentialMode}">
+      <span>Последовательный режим — следующий урок открывается после сдачи предыдущего</span>
+    </label>
+
+    <label class="ss-check">
+      <input type="checkbox" th:field="*{published}">
+      <span>Опубликован — виден в каталоге всем</span>
+    </label>
+
+    <label class="ss-check">
+      <input type="checkbox" th:field="*{inviteOnly}">
+      <span>Спецкурс — доступ только по ссылке-приглашению (в каталоге не виден)</span>
+    </label>
+
+    <div class="ss-actions">
+      <button class="ss-btn ss-btn--primary" type="submit">
+        <i data-lucide="save" aria-hidden="true"></i>
+        <span th:if="${isNew}">Создать курс</span>
+        <span th:if="${!isNew}">Сохранить</span>
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{/teacher}">Отмена</a>
+    </div>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

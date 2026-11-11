@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Нет доступа')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <h1>403 🌥</h1>
+    <p class="ss-mut">Сюда солнце пока не светит: нет прав для этой страницы.</p>
+    <a class="ss-btn ss-btn--primary" style="margin-top:10px" th:href="@{/}">На главную</a>
+  </div>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

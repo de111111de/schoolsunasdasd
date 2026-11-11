@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head(${quiz.title})}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('student')}"></header>
+
+<main class="ss-section" style="max-width:780px">
+  <div class="ss-quiz-head ss-reveal">
+    <div>
+      <p class="ss-kicker" style="margin-bottom:4px" th:text="|Попытка ${attemptNo} из ${maxAttempts}|">Попытка</p>
+      <h1 style="margin:0;font-size:28px" th:text="${quiz.title}">Тест</h1>
+    </div>
+    <div class="ss-timer" id="ss-timer" th:if="${remaining >= 0}" th:attr="data-remaining=${remaining}"
+         aria-live="off">--:--</div>
+  </div>
+
+  <form id="ss-quiz-form" th:action="@{'/student/quiz/' + ${quiz.id}}" method="post">
+    <div th:replace="~{fragments/logo :: csrf}"></div>
+
+    <div class="ss-card ss-reveal" th:each="row, iter : ${rows}" style="margin-bottom:18px">
+      <p class="ss-q__text">
+        <span class="ss-mut" th:text="|${iter.index + 1}. |">1. </span>
+        <span th:text="${row.question.text}">Вопрос</span>
+        <span class="ss-q__points" th:text="|· ${row.question.points} балл(ов)|"></span>
+      </p>
+
+      <!-- одиночный выбор -->
+      <div th:if="${row.question.type.name() == 'SINGLE'}">
+        <label class="ss-opt" th:each="o : ${row.options}">
+          <input type="radio" th:name="'q_' + ${row.question.id}" th:value="${o.id}">
+          <span th:text="${o.text}">Вариант</span>
+        </label>
+      </div>
+
+      <!-- множественный выбор -->
+      <div th:if="${row.question.type.name() == 'MULTI'}">
+        <label class="ss-opt" th:each="o : ${row.options}">
+          <input type="checkbox" th:name="'q_' + ${row.question.id}" th:value="${o.id}">
+          <span th:text="${o.text}">Вариант</span>
+        </label>
+        <p class="ss-tiny" style="margin:4px 0 0">Отметь все подходящие варианты</p>
+      </div>
+
+      <!-- соответствие -->
+      <div th:if="${row.question.type.name() == 'MATCH'}">
+        <div class="ss-opt" th:each="o : ${row.options}" style="cursor:default">
+          <span style="flex:1" th:text="${o.text}">Левая часть</span>
+          <select class="ss-select" style="width:auto;min-width:170px"
+                  th:name="'q_' + ${row.question.id} + '__' + ${o.id}">
+            <option value="">— выбери —</option>
+            <option th:each="p : ${row.pairs}" th:value="${p}" th:text="${p}">Пара</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ввод числа / короткий ответ -->
+      <div th:if="${row.question.type.name() == 'NUMBER' or row.question.type.name() == 'TEXT'}">
+        <input class="ss-input" type="text" th:name="'q_' + ${row.question.id}"
+               th:placeholder="${row.question.type.name() == 'NUMBER'} ? 'Введи число' : 'Введи ответ'">
+      </div>
+
+      <!-- открытый ответ -->
+      <div th:if="${row.question.type.name() == 'OPEN'}">
+        <textarea class="ss-textarea" th:name="'q_' + ${row.question.id}"
+                  placeholder="Развёрнутый ответ — его проверит учитель"></textarea>
+      </div>
+    </div>
+
+    <div class="ss-actions" style="justify-content:center;padding:10px 0 40px">
+      <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit">
+        <i data-lucide="send" aria-hidden="true"></i> Сдать тест
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{'/student/lessons/' + ${quiz.lesson.id}}">Вернуться к уроку</a>
+    </div>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script th:inline="javascript">
+(function () {
+  var el = document.getElementById('ss-timer');
+  var form = document.getElementById('ss-quiz-form');
+  if (!el || !form) return;
+  var left = parseInt(el.getAttribute('data-remaining'), 10);
+  if (isNaN(left) || left < 0) return;
+  var submitted = false;
+  form.addEventListener('submit', function () { submitted = true; });
+  function render() {
+    var m = Math.floor(left / 60), s = left % 60;
+    el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    if (left <= 30) el.classList.add('low');
+  }
+  render();
+  var timer = setInterval(function () {
+    left--;
+    if (left <= 0) {
+      clearInterval(timer);
+      render();
+      if (!submitted) form.submit();
+      return;
+    }
+    render();
+  }, 1000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Рейтинг')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('leaderboard')}"></header>
+
+<main class="ss-section">
+  <p class="ss-kicker ss-reveal">Геймификация</p>
+  <h2 class="ss-reveal">Лидерборд</h2>
+  <p class="ss-hint ss-reveal">Баллы начисляются за лучшие попытки тестов и принятые домашние задания.</p>
+
+  <div class="ss-card ss-reveal" th:if="${!#lists.isEmpty(myCourses)}" style="margin-bottom:24px">
+    <form th:action="@{/student/leaderboard}" method="get" class="ss-row" style="margin-bottom:0">
+      <div class="ss-field" style="margin-bottom:0;flex:1;max-width:420px">
+        <label for="courseId">Выбери курс</label>
+        <select class="ss-select" id="courseId" name="courseId" onchange="this.form.submit()">
+          <option value="">— выбери курс —</option>
+          <option th:each="mc : ${myCourses}" th:value="${mc.course.id}" th:text="${mc.course.title}"
+                  th:selected="${selectedId != null && selectedId == mc.course.id}">Курс</option>
+        </select>
+      </div>
+      <button class="ss-btn ss-btn--primary" type="submit">Показать</button>
+    </form>
+  </div>
+
+  <div th:if="${course == null}" class="ss-empty ss-reveal">
+    <p>Выбери курс сверху, чтобы увидеть рейтинг своей группы.</p>
+  </div>
+
+  <div th:if="${course != null}">
+    <div class="ss-counters ss-reveal" style="margin-bottom:24px">
+      <div class="ss-counter"><b th:text="${#lists.size(rows)}">0</b><small>участников</small></div>
+      <div class="ss-counter">
+        <b th:text="${myRow != null} ? ${myRow.rank} : '—'">0</b><small>твоё место</small>
+      </div>
+      <div class="ss-counter">
+        <b th:text="${myRow != null} ? ${myRow.points} : '—'">0</b><small>твои баллы</small>
+      </div>
+    </div>
+
+    <div th:each="r : ${rows}"
+         class="ss-rowcard ss-reveal"
+         th:classappend="${r.rank <= 3} ? ss-rowcard--top : (${r.studentId == myId} ? ss-rowcard--me : '')">
+      <span class="ss-medal" th:classappend="${r.rank == 1} ? 'ss-medal--1' : (${r.rank == 2} ? 'ss-medal--2' : (${r.rank == 3} ? 'ss-medal--3' : 'ss-medal--none'))"
+            th:text="${r.rank}">1</span>
+      <div>
+        <b th:text="${r.name}">Ученик</b>
+        <div class="ss-tiny">
+          <span th:text="|Пройдено уроков: ${r.completedLessons}|">уроков</span>
+          <span th:if="${r.studentId == myId}" style="color:var(--sun-3);font-weight:700"> · это ты</span>
+        </div>
+      </div>
+      <span class="ss-pts" th:text="${r.points}">0</span>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head(${course.title})}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('courses')}"></header>
+
+<main class="ss-section">
+  <div class="ss-card ss-reveal" th:classappend="|ss-acc--${course.accent}|"
+       style="border:1.5px solid transparent;background:linear-gradient(140deg,var(--acc1,#FFD93D),var(--acc2,#FF8C42));padding:2px">
+    <div style="background:var(--surface);border-radius:21px;padding:28px">
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <div class="ss-course__chip" style="width:56px;height:56px">
+          <i data-lucide="sigma" th:if="${course.subject.name() == 'MATH'}" aria-hidden="true"></i>
+          <i data-lucide="atom" th:if="${course.subject.name() == 'PHYSICS'}" aria-hidden="true"></i>
+          <i data-lucide="code" th:if="${course.subject.name() == 'CS'}" aria-hidden="true"></i>
+          <i data-lucide="flask-conical" th:if="${course.subject.name() == 'CHEMISTRY'}" aria-hidden="true"></i>
+          <i data-lucide="leaf" th:if="${course.subject.name() == 'BIOLOGY'}" aria-hidden="true"></i>
+          <i data-lucide="globe" th:if="${course.subject.name() == 'LANG'}" aria-hidden="true"></i>
+          <i data-lucide="graduation-cap" th:if="${course.subject.name() == 'HISTORY' or course.subject.name() == 'OTHER'}" aria-hidden="true"></i>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <p class="ss-kicker" style="margin:0" th:text="|${course.subject.label} · ${course.grade} класс|">Математика</p>
+          <h1 style="margin:4px 0 6px;font-size:30px" th:text="${course.title}">Курс</h1>
+          <p class="ss-mut ss-tiny">
+            Учитель: <b style="color:var(--ink)" th:text="${course.teacher.fullName}">Мария</b>
+            · <span th:text="${lessonCount}">0</span> уроков
+            · <span th:text="${studentCount}">0</span> учеников
+            <span th:if="${course.sequentialMode}"> · последовательный режим</span>
+          </p>
+        </div>
+        <div>
+          <span class="ss-badge ss-badge--warn" th:if="${!course.published}"><i></i>Черновик</span>
+        </div>
+      </div>
+      <p style="margin:16px 0 0" th:text="${course.description}">Описание курса</p>
+
+      <div class="ss-actions" style="margin-top:20px">
+        <form th:if="${me != null && me.role.name() == 'STUDENT' && !enrolled}"
+              th:action="@{'/courses/' + ${course.slug} + '/enroll'}" method="post">
+          <div th:replace="~{fragments/logo :: csrf}"></div>
+          <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit">Записаться на курс</button>
+        </form>
+        <a class="ss-btn ss-btn--primary ss-btn--lg" th:if="${enrolled}"
+           th:href="@{'/student/courses/' + ${course.id}}">Продолжить обучение</a>
+        <a class="ss-btn ss-btn--outline" th:href="@{/courses}">← К каталогу</a>
+        <a class="ss-btn ss-btn--ghost" th:if="${canManage}"
+           th:href="@{'/teacher/courses/' + ${course.id}}"><i data-lucide="settings" aria-hidden="true"></i> Управлять курсом</a>
+      </div>
+      <p class="ss-tiny" style="margin:10px 0 0" th:if="${me == null}">
+        Уже есть аккаунт? <a th:href="@{/login}">Войди</a>, чтобы записаться на курс.
+      </p>
+    </div>
+  </div>
+
+  <section style="margin-top:34px">
+    <p class="ss-kicker ss-reveal">Программа</p>
+    <h2 class="ss-reveal">Уроки курса</h2>
+    <div class="ss-rowcard ss-reveal" th:each="l : ${lessons}" th:if="${l.published or canManage}"
+         th:classappend="${!l.published} ? '' : ''">
+      <span class="ss-medal ss-medal--none" th:text="${l.position}">1</span>
+      <div style="flex:1">
+        <b th:text="${l.title}">Урок</b>
+        <div class="ss-tiny" th:if="${!l.published}">черновик — виден только учителю</div>
+      </div>
+      <span class="ss-badge ss-badge--info" th:if="${enrolled}"><i></i>Доступен</span>
+      <i data-lucide="lock" aria-hidden="true" class="ss-mut" th:if="${course.sequentialMode && me != null && me.role.name() == 'STUDENT' && !enrolled}"></i>
+    </div>
+    <div class="ss-empty" th:if="${#lists.isEmpty(lessons)}">
+      <p>Учитель ещё не добавил уроки в этот курс.</p>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

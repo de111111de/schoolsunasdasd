@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Ошибка')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <h1>500 🌩</h1>
+    <p class="ss-mut" th:text="${message} ?: 'Что-то пошло не так. Мы уже разбираемся.'">Ошибка</p>
+    <a class="ss-btn ss-btn--primary" style="margin-top:10px" th:href="@{/}">На главную</a>
+  </div>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

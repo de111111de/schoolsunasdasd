@@ -1,0 +1,46 @@
+/* ---------- кнопки ---------- */
+.ss-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface-2);
+  text-decoration: none;
+  transition: transform .18s cubic-bezier(.34, 1.56, .64, 1), box-shadow .18s ease, background .18s ease;
+}
+.ss-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 20px rgba(255, 140, 66, .28); color: var(--ink); }
+.ss-btn:active { transform: scale(.96); }
+.ss-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.ss-btn--primary { background: var(--grad-sun); color: #3A2A00; box-shadow: 0 6px 18px rgba(255, 140, 66, .35); }
+.ss-btn--primary:hover { box-shadow: 0 12px 28px rgba(255, 140, 66, .5); color: #3A2A00; }
+.ss-btn--outline { background: transparent; border-color: var(--sun-3); color: var(--sun-3); }
+.ss-btn--outline:hover { background: rgba(255, 140, 66, .09); }
+.ss-btn--ghost { background: transparent; color: var(--ink-soft); }
+.ss-btn--ghost:hover { background: var(--surface-2); box-shadow: none; }
+.ss-btn--danger { background: #E2543F; color: #fff; }
+.ss-btn--danger:hover { box-shadow: 0 8px 20px rgba(226, 84, 63, .4); color: #fff; }
+.ss-btn--glass { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .55); color: #fff; backdrop-filter: blur(4px); }
+.ss-btn--glass:hover { color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, .2); }
+.ss-btn--sm { padding: 7px 14px; font-size: 13px; border-radius: 10px; }
+.ss-btn--lg { padding: 13px 26px; font-size: 15px; border-radius: 14px; }
+
+.ss-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+  transform: scale(0);
+  animation: ss-ripple .6s ease-out forwards;
+  pointer-events: none;
+}
+.ss-btn--outline .ss-ripple, .ss-btn--ghost .ss-ripple { background: rgba(255, 140, 66, .25); }

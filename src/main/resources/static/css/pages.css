@@ -1,0 +1,256 @@
+/* ---------- страницы: авторизация ---------- */
+.ss-auth {
+  min-height: calc(100vh - 200px);
+  display: grid;
+  place-items: center;
+  padding: 50px 20px;
+}
+.ss-auth__card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 34px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ss-auth__card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--grad-sun);
+}
+.ss-auth__sun { margin: 0 auto 14px; display: block; }
+.ss-auth__card h1 { margin: 0 0 6px; font-weight: 800; font-size: 24px; }
+.ss-auth__card .ss-mut { margin-bottom: 22px; }
+.ss-auth__card form { text-align: left; }
+.ss-auth__links { margin-top: 18px; font-size: 13px; }
+.ss-error {
+  background: rgba(226, 84, 63, .12);
+  border: 1px solid rgba(226, 84, 63, .35);
+  color: #C33D2B;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+:root[data-night] .ss-error { color: #FF8A75; }
+.ss-info {
+  background: rgba(255, 179, 71, .14);
+  border: 1px solid rgba(255, 179, 71, .4);
+  color: #9A6210;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+:root[data-night] .ss-info { color: #FFC96B; }
+
+/* ---------- кабинет ученика ---------- */
+.ss-profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+.ss-profile__ava {
+  width: 74px; height: 74px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--grad-sun);
+  color: #3A2A00;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 26px;
+  box-shadow: 0 8px 24px var(--glow);
+  flex: none;
+}
+.ss-profile__info h1 { margin: 0 0 4px; font-size: 26px; }
+.ss-profile__stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+
+/* ---------- урок ---------- */
+.ss-lesson-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .ss-lesson-layout { grid-template-columns: 1fr; } }
+
+.ss-lesson-nav { position: sticky; top: 76px; }
+.ss-lesson-nav a {
+  display: block;
+  padding: 9px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid transparent;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.ss-lesson-nav a:hover { background: var(--surface-2); color: var(--ink); }
+.ss-lesson-nav a.current {
+  background: var(--surface);
+  border-color: var(--sun-2);
+  color: var(--ink);
+  box-shadow: 0 4px 14px var(--glow);
+}
+.ss-lesson-nav a.locked { opacity: .45; }
+
+.ss-prose { line-height: 1.7; }
+.ss-prose h2 { font-size: 22px; margin: 26px 0 10px; }
+.ss-prose h3 { font-size: 17px; margin: 20px 0 8px; }
+.ss-prose p { margin: 10px 0; }
+.ss-prose ul, .ss-prose ol { padding-left: 24px; }
+.ss-prose code {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 13px;
+}
+.ss-prose pre {
+  background: var(--sky-1);
+  color: #FFE9A8;
+  border-radius: 12px;
+  padding: 16px 18px;
+  overflow-x: auto;
+}
+.ss-prose pre code { background: none; border: none; color: inherit; padding: 0; }
+.ss-prose blockquote {
+  margin: 14px 0;
+  padding: 10px 18px;
+  border-left: 4px solid var(--sun-2);
+  background: var(--surface-2);
+  border-radius: 0 12px 12px 0;
+  color: var(--ink-soft);
+}
+.ss-prose img { border-radius: 12px; }
+
+.ss-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+.ss-lesson-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 26px 0 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- тест ---------- */
+.ss-quiz-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.ss-timer {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 18px;
+  box-shadow: var(--shadow);
+}
+.ss-timer.low { color: #E2543F; animation: ss-pulse 1s ease-in-out infinite; }
+@keyframes ss-pulse { 50% { transform: scale(1.06); } }
+
+.ss-q { margin-bottom: 22px; }
+.ss-q__text { font-family: var(--font-head); font-weight: 700; margin: 0 0 12px; }
+.ss-q__points { font-weight: 500; color: var(--ink-soft); font-size: 12px; }
+.ss-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+.ss-opt:hover { border-color: var(--sun-2); transform: translateX(3px); }
+.ss-opt input { accent-color: var(--sun-3); width: 17px; height: 17px; flex: none; }
+.ss-opt.is-checked { border-color: var(--sun-2); box-shadow: 0 0 0 3px rgba(255, 179, 71, .2); }
+
+.ss-answer-correct { border-color: #2E8B57 !important; background: rgba(63, 167, 106, .08); }
+.ss-answer-wrong { border-color: #E2543F !important; background: rgba(226, 84, 63, .08); }
+
+/* ---------- панель учителя / конструктор ---------- */
+.ss-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+
+.ss-qitem {
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  background: var(--surface);
+}
+.ss-qitem__head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.ss-qitem__head .ss-field { margin: 0; flex: 1; }
+.ss-optrow { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.ss-optrow .ss-input { flex: 1; }
+.ss-optrow input[type="radio"], .ss-optrow input[type="checkbox"] { accent-color: var(--sun-3); width: 18px; height: 18px; flex: none; }
+.ss-iconbtn {
+  width: 34px; height: 34px;
+  flex: none;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 16px;
+  transition: color .2s, border-color .2s, transform .15s;
+}
+.ss-iconbtn:hover { color: #E2543F; border-color: #E2543F; transform: scale(1.08); }
+
+/* ---------- сертификат ---------- */
+.ss-cert {
+  max-width: 760px;
+  margin: 30px auto;
+  padding: 46px 40px;
+  text-align: center;
+  background: var(--surface);
+  border: 3px solid var(--sun-2);
+  border-radius: 26px;
+  box-shadow: 0 24px 60px rgba(255, 140, 66, .25);
+  position: relative;
+  overflow: hidden;
+}
+.ss-cert::before {
+  content: "";
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 217, 61, .5), transparent 70%);
+}
+.ss-cert__brand { font-family: var(--font-head); font-weight: 800; letter-spacing: .14em; color: #C47C14; }
+.ss-cert h1 { font-size: 34px; margin: 16px 0 4px; }
+.ss-cert__name { font-family: var(--font-head); font-weight: 800; font-size: 26px; color: var(--sun-3); margin: 18px 0 8px; }
+.ss-cert__serial { font-size: 12px; color: var(--ink-soft); margin-top: 26px; font-variant-numeric: tabular-nums; }
+
+/* ---------- админка ---------- */
+.ss-admin-grid { display: grid; grid-template-columns: 1fr; gap: 26px; }
+
+.ss-inline-form { display: inline-flex; gap: 6px; align-items: center; }
+.ss-inline-form .ss-select { width: auto; padding: 6px 10px; font-size: 13px; }

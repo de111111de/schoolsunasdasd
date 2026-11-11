@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Восстановление пароля')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <h1>Забыли пароль?</h1>
+    <p class="ss-mut">Ничего страшного — даже солнце иногда заходит за тучу.</p>
+
+    <div class="ss-error" role="alert" th:if="${error}" th:text="${error}">Ошибка</div>
+
+    <div th:if="${resetLink == null}">
+      <form th:action="@{/forgot-password}" method="post">
+        <div th:replace="~{fragments/logo :: csrf}"></div>
+        <div class="ss-field">
+          <label for="email">Email аккаунта</label>
+          <input class="ss-input" id="email" type="email" name="email" required placeholder="solntse@schoolsun.ru">
+        </div>
+        <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit" style="width:100%">Восстановить пароль</button>
+      </form>
+    </div>
+
+    <div th:if="${resetLink != null}">
+      <div class="ss-info">
+        Демо-режим: письма не отправляются, поэтому ссылка для сброса пароля — прямо здесь:
+      </div>
+      <p style="word-break:break-all">
+        <a class="ss-btn ss-btn--primary ss-btn--lg" style="width:100%" th:href="${resetLink}">Перейти к смене пароля</a>
+      </p>
+    </div>
+
+    <div class="ss-auth__links">
+      <p style="margin:0"><a th:href="@{/login}">← Вернуться ко входу</a></p>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

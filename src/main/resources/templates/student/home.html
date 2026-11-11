@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Мой кабинет')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('student')}"></header>
+
+<main class="ss-section">
+  <div class="ss-profile ss-reveal">
+    <div class="ss-profile__ava" th:text="${me.fullName.split(' ')[0].substring(0,1)}">А</div>
+    <div class="ss-profile__info">
+      <h1 th:text="|Привет, ${me.fullName.split(' ')[0]}!|">Привет!</h1>
+      <p class="ss-mut" style="margin:0">Продолжай учиться — каждое утро солнце встаёт чуть ярче.</p>
+      <div class="ss-profile__stats">
+        <span class="ss-badge ss-badge--warn"><i></i><span th:text="${totalPoints}">0</span> солнечных баллов</span>
+        <span class="ss-badge ss-badge--info"><i></i><span th:text="${completedTotal}">0</span> уроков пройдено</span>
+        <span class="ss-badge ss-badge--ok" th:if="${!#lists.isEmpty(certs)}"><i></i><span th:text="${#lists.size(certs)}">0</span> сертификатов</span>
+      </div>
+    </div>
+    <div style="margin-left:auto">
+      <a class="ss-btn ss-btn--outline" th:href="@{/student/leaderboard}">
+        <i data-lucide="trophy" aria-hidden="true"></i> Рейтинг
+      </a>
+    </div>
+  </div>
+
+  <section style="margin-bottom:40px">
+    <p class="ss-kicker ss-reveal">Мои курсы</p>
+    <h2 class="ss-reveal">Продолжай с того места, где остановился</h2>
+    <div class="ss-cards" th:if="${!#lists.isEmpty(myCourses)}">
+      <article class="ss-course ss-reveal" th:each="mc, iter : ${myCourses}"
+               th:classappend="|ss-acc--${mc.course.accent}|"
+               th:styleappend="'--d:' + ${(iter.index % 3) * 0.08} + 's'">
+        <div class="ss-course__inner">
+          <small th:text="|${mc.course.subject.label} · ${mc.course.grade} класс|">Предмет</small>
+          <h3 th:text="${mc.course.title}">Курс</h3>
+          <div class="ss-progressbox">
+            <small th:text="|Пройдено ${mc.percent}%|">Пройдено</small>
+            <div class="ss-progress"><i th:attr="data-val=${mc.percent}"></i></div>
+          </div>
+          <div class="ss-course__foot">
+            <span class="ss-tiny" th:text="|${mc.lessonsTotal} уроков|">уроков</span>
+            <a class="ss-btn ss-btn--primary ss-btn--sm" th:href="@{'/student/courses/' + ${mc.course.id}}">
+              <span th:if="${mc.next != null}">Продолжить</span>
+              <span th:if="${mc.next == null}">Повторить</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="ss-empty ss-reveal" th:if="${#lists.isEmpty(myCourses)}">
+      <h3>Пока нет курсов</h3>
+      <p>Загляни в <a th:href="@{/courses}">каталог</a> и выбери первый — он бесплатный, как рассвет.</p>
+    </div>
+  </section>
+
+  <div class="ss-grid2">
+    <section class="ss-reveal">
+      <p class="ss-kicker">Дедлайны</p>
+      <h2 style="font-size:22px">Ближайшие домашние задания</h2>
+      <div th:if="${#lists.isEmpty(deadlines)}" class="ss-empty">
+        <p>Всё сдано! Можно отдохнуть и посмотреть на закат.</p>
+      </div>
+      <div class="ss-rowcard" th:each="d : ${deadlines}">
+        <i data-lucide="alarm-clock" aria-hidden="true" style="color:var(--sun-3)"></i>
+        <div style="flex:1">
+          <b th:text="${d.homework.title}">Домашка</b>
+          <div class="ss-tiny" th:text="${d.course.title}">Курс</div>
+        </div>
+        <span class="ss-badge ss-badge--warn"><i></i><span th:text="${T(ru.schoolsun.common.Dates).fmt(d.homework.deadline)}">дата</span></span>
+      </div>
+    </section>
+
+    <section class="ss-reveal" style="--d:.1s">
+      <p class="ss-kicker">Достижения</p>
+      <h2 style="font-size:22px">Мои сертификаты</h2>
+      <div th:if="${#lists.isEmpty(certs)}" class="ss-empty">
+        <p>Пройди курс целиком — и сертификат SCHOOLSUN твой.</p>
+      </div>
+      <div class="ss-rowcard" th:each="c : ${certs}">
+        <span class="ss-medal ss-medal--1"><i data-lucide="award" style="width:18px;height:18px" aria-hidden="true"></i></span>
+        <div style="flex:1">
+          <b th:text="${c.course.title}">Курс</b>
+          <div class="ss-tiny" th:text="|№ ${c.serialNumber} · ${T(ru.schoolsun.common.Dates).date(c.issuedAt)}|">данные</div>
+        </div>
+        <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/certificates/' + ${c.serialNumber}}">Открыть</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

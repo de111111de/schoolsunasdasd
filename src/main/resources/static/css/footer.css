@@ -1,0 +1,29 @@
+/* ---------- футер ---------- */
+.ss-footer {
+  margin-top: 76px;
+  background: var(--sky-1);
+  color: #F7F1E4;
+  position: relative;
+  padding: 64px 22px 28px;
+  text-align: center;
+}
+.ss-footer .ss-wave { bottom: auto; top: -1px; transform: rotate(180deg); height: 70px; }
+.ss-footer__logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ss-footer p { margin: 0; font-size: 13px; color: rgba(247, 241, 228, .75); }
+.ss-footer a { color: #FFD93D; }
+
+/* ---------- ключевые кадры ---------- */
+@keyframes ss-spin { to { transform: rotate(360deg); } }
+@keyframes ss-rise { from { transform: translateY(130px) scale(.82); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ss-float { to { transform: translateY(-12px); } }
+@keyframes ss-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .95; } }
+@keyframes ss-pfloat {
+  0% { transform: translateY(0); opacity: 0; }
+  12% { opacity: .85; }
+  100% { transform: translateY(-480px); opacity: 0; }
+}
+@keyframes ss-ripple { to { transform: scale(4); opacity: 0; } }
+@keyframes ss-shimmer { to { background-position: -200% 0; } }
+@keyframes ss-toast-in { from { transform: translateY(18px) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ss-toast-out { to { transform: translateY(10px); opacity: 0; } }
+@keyframes ss-shine { 0%, 55% { transform: translateX(-130%); } 85%, 100% { transform: translateX(130%); } }

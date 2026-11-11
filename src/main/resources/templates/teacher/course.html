@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head(${course.title})}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section">
+  <div class="ss-reveal" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:24px">
+    <div style="flex:1;min-width:240px">
+      <p class="ss-kicker" style="margin-bottom:2px" th:text="|${course.subject.label} · ${course.grade} класс|">Предмет</p>
+      <h1 style="margin:0;font-size:28px" th:text="${course.title}">Курс</h1>
+    </div>
+    <a class="ss-btn ss-btn--outline" th:href="@{'/teacher/analytics/' + ${course.id}}">
+      <i data-lucide="bar-chart-3" aria-hidden="true"></i> Аналитика
+    </a>
+    <a class="ss-btn ss-btn--outline" th:href="@{'/teacher/courses/' + ${course.id} + '/export.csv'}">
+      <i data-lucide="download" aria-hidden="true"></i> Экспорт CSV
+    </a>
+    <a class="ss-btn ss-btn--ghost" th:href="@{'/courses/' + ${course.slug}}">Страница курса</a>
+  </div>
+
+  <div class="ss-grid2">
+    <!-- Настройки -->
+    <section class="ss-reveal">
+      <p class="ss-kicker">Настройки</p>
+      <form class="ss-card" th:action="@{'/teacher/courses/' + ${course.id}}" th:object="${form}" method="post">
+        <div th:replace="~{fragments/logo :: csrf}"></div>
+        <div class="ss-field">
+          <label for="title">Название</label>
+          <input class="ss-input" id="title" type="text" th:field="*{title}" required>
+        </div>
+        <div class="ss-field">
+          <label for="description">Описание</label>
+          <textarea class="ss-textarea" id="description" th:field="*{description}" style="min-height:90px"></textarea>
+        </div>
+        <div class="ss-row">
+          <div class="ss-field" style="flex:1;margin-bottom:0">
+            <label for="subject">Предмет</label>
+            <select class="ss-select" id="subject" th:field="*{subject}">
+              <option th:each="s : ${T(ru.schoolsun.course.Subject).values()}" th:value="${s.name()}" th:text="${s.label}"></option>
+            </select>
+          </div>
+          <div class="ss-field" style="flex:1;margin-bottom:0">
+            <label for="grade">Класс</label>
+            <select class="ss-select" id="grade" th:field="*{grade}">
+              <option th:each="g : ${#numbers.sequence(5, 11)}" th:value="${g}" th:text="|${g} класс|"></option>
+            </select>
+          </div>
+        </div>
+        <div class="ss-field">
+          <label for="accent">Цвет карточки</label>
+          <select class="ss-select" id="accent" th:field="*{accent}">
+            <option value="sun">Солнце</option>
+            <option value="sky">Небо</option>
+            <option value="ember">Закат</option>
+          </select>
+        </div>
+        <label class="ss-check">
+          <input type="checkbox" th:field="*{sequentialMode}">
+          <span>Последовательный режим</span>
+        </label>
+        <label class="ss-check">
+          <input type="checkbox" th:field="*{published}">
+          <span>Опубликован</span>
+        </label>
+        <label class="ss-check">
+          <input type="checkbox" th:field="*{inviteOnly}">
+          <span>Спецкурс (только по ссылке)</span>
+        </label>
+        <div class="ss-actions">
+          <button class="ss-btn ss-btn--primary" type="submit">Сохранить</button>
+        </div>
+      </form>
+
+      <form th:action="@{'/teacher/courses/' + ${course.id} + '/delete'}" method="post"
+            style="margin-top:14px" onsubmit="return confirm('Удалить курс со всеми уроками и тестами?')">
+        <div th:replace="~{fragments/logo :: csrf}"></div>
+        <button class="ss-btn ss-btn--danger" type="submit">
+          <i data-lucide="trash-2" aria-hidden="true"></i> Удалить курс
+        </button>
+      </form>
+
+      <div th:if="${course.inviteOnly}" class="ss-card" style="margin-top:16px">
+        <p class="ss-kicker" style="margin-bottom:6px">Ссылка-приглашение</p>
+        <p class="ss-tiny" style="margin:0 0 12px">
+          Спецкурс не виден в каталоге. Кинь эту ссылку в школьный чат — ученики перейдут
+          и запишутся в один клик (без ссылки доступны только общедоступные курсы).
+        </p>
+        <div class="ss-row" style="margin-bottom:0;align-items:center">
+          <code class="ss-input" id="ss-invite" th:attr="data-code=${course.inviteCode}"
+                style="background:var(--surface-2);flex:1;min-width:180px"
+                th:text="|/join/${course.inviteCode}|">/join/xxxxxxxxxx</code>
+          <button class="ss-btn ss-btn--outline ss-btn--sm" type="button" id="ss-copy-invite">
+            <i data-lucide="copy" aria-hidden="true"></i> Скопировать
+          </button>
+          <form th:action="@{'/teacher/courses/' + ${course.id} + '/invite'}" method="post"
+                onsubmit="return confirm('Сгенерировать новую ссылку? Старая перестанет работать.')">
+            <div th:replace="~{fragments/logo :: csrf}"></div>
+            <button class="ss-btn ss-btn--ghost ss-btn--sm" type="submit">Обновить</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Уроки -->
+    <section class="ss-reveal" style="--d:.08s">
+      <p class="ss-kicker">Программа</p>
+      <div class="ss-toolbar">
+        <h2 style="margin:0;font-size:22px;flex:1">Уроки (<span th:text="${#lists.size(lessons)}">0</span>)</h2>
+        <a class="ss-btn ss-btn--primary ss-btn--sm" th:href="@{'/teacher/courses/' + ${course.id} + '/lessons/new'}">
+          <i data-lucide="plus" aria-hidden="true"></i> Добавить урок
+        </a>
+      </div>
+      <div class="ss-rowcard" th:each="l : ${lessons}">
+        <span class="ss-medal ss-medal--none" th:text="${l.position}">1</span>
+        <div style="flex:1;min-width:140px">
+          <b th:text="${l.title}">Урок</b>
+          <div class="ss-tiny">
+            <span th:if="${!l.published}">черновик · </span>
+            <a th:href="@{'/teacher/lessons/' + ${l.id}}">редактировать</a>
+          </div>
+        </div>
+      </div>
+      <div class="ss-empty" th:if="${#lists.isEmpty(lessons)}">
+        <p>Уроков пока нет — добавь первый!</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Ученики -->
+  <section style="margin-top:36px" class="ss-reveal">
+    <p class="ss-kicker">Успеваемость</p>
+    <h2 style="font-size:22px">Ученики курса (<span th:text="${#lists.size(students)}">0</span>)</h2>
+    <div class="ss-card ss-tablewrap">
+      <table class="ss-table" th:if="${!#lists.isEmpty(students)}">
+        <thead>
+        <tr>
+          <th>Ученик</th><th>Email</th><th>Баллы</th><th>Уроки</th><th>Средний тест</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${students}">
+          <td><b th:text="${r.name}">Имя</b></td>
+          <td class="ss-mut ss-tiny" th:text="${r.email}">email</td>
+          <td class="ss-num" th:text="${r.points}">0</td>
+          <td class="ss-num" th:text="|${r.completed}/${r.lessonsTotal}|">0/0</td>
+          <td class="ss-num">
+            <span th:if="${r.avgQuizPercent != null}" th:text="|${#numbers.formatDecimal(r.avgQuizPercent, 1, 0)}%|">—</span>
+            <span th:if="${r.avgQuizPercent == null}">—</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <p class="ss-mut" th:if="${#lists.isEmpty(students)}" style="margin:0;text-align:center;padding:20px">
+        Пока никто не записался на курс.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script th:if="${course.inviteOnly}">
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('ss-copy-invite');
+    var code = document.getElementById('ss-invite').getAttribute('data-code');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var full = window.location.origin + '/join/' + code;
+        var done = function () { if (window.ssToast) window.ssToast('Ссылка скопирована — кидай в чат!'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(full).then(done);
+        } else {
+          var tmp = document.createElement('input');
+          tmp.value = full;
+          document.body.appendChild(tmp);
+          tmp.select();
+          document.execCommand('copy');
+          tmp.remove();
+          done();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>

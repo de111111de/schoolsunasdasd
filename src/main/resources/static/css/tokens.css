@@ -1,0 +1,37 @@
+/* SCHOOLSUN — фирменная палитра «рассвет» и тёмная тема «ночь» */
+:root {
+  --sun-1: #FFD93D;
+  --sun-2: #FFB347;
+  --sun-3: #FF8C42;
+  --sky-1: #1B2A4A;
+  --sky-2: #223A6D;
+  --sky-3: #4A5D9E;
+  --bg: #FFF9F0;
+  --surface: #FFFFFF;
+  --surface-2: #FFF3E0;
+  --ink: #1B2A4A;
+  --ink-soft: #5A6B8C;
+  --line: rgba(27, 42, 74, .12);
+  --track: rgba(27, 42, 74, .10);
+  --header-bg: rgba(255, 249, 240, .86);
+  --glow: rgba(255, 179, 71, .45);
+  --grad-sun: linear-gradient(135deg, #FFD93D 0%, #FFB347 50%, #FF8C42 100%);
+  --r-lg: 22px;
+  --r-md: 14px;
+  --shadow: 0 10px 30px rgba(27, 42, 74, .10);
+  --font-head: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+:root[data-night] {
+  --bg: #0D1530;
+  --surface: #16224A;
+  --surface-2: #1B2A5C;
+  --ink: #F7F1E4;
+  --ink-soft: #A8B4D4;
+  --line: rgba(255, 255, 255, .14);
+  --track: rgba(255, 255, 255, .13);
+  --header-bg: rgba(13, 21, 48, .82);
+  --glow: rgba(255, 179, 71, .30);
+  --shadow: 0 12px 34px rgba(0, 0, 0, .45);
+}

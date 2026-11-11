@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head(${isNew} ? 'Новый урок' : lesson.title)}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:760px">
+  <p class="ss-kicker ss-reveal" th:text="${course.title}">Курс</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px"
+      th:text="${isNew} ? 'Новый урок' : 'Редактирование урока'">Урок</h1>
+  <p class="ss-hint ss-reveal">Теория поддерживает Markdown: **жирный**, `код`, списки, > цитаты и ``` блоки кода.</p>
+
+  <form class="ss-card ss-reveal" th:object="${form}"
+        th:action="${isNew} ? @{'/teacher/courses/' + ${course.id} + '/lessons'} : @{'/teacher/lessons/' + ${lesson.id}}"
+        method="post" enctype="multipart/form-data">
+    <div th:replace="~{fragments/logo :: csrf}"></div>
+
+    <div class="ss-field">
+      <label for="title">Название урока *</label>
+      <input class="ss-input" id="title" type="text" th:field="*{title}" required
+             placeholder="Например: Линейная функция и её график">
+    </div>
+
+    <div class="ss-field">
+      <label for="theoryMd">Теория (Markdown)</label>
+      <textarea class="ss-textarea" id="theoryMd" th:field="*{theoryMd}" style="min-height:260px"
+                placeholder="## Заголовок&#10;&#10;Текст урока…"></textarea>
+    </div>
+
+    <div class="ss-field">
+      <label for="videoUrl">Видео (ссылка на YouTube — встроим плеер)</label>
+      <input class="ss-input" id="videoUrl" type="url" th:field="*{videoUrl}"
+             placeholder="https://www.youtube.com/watch?v=…">
+    </div>
+
+    <div class="ss-field" th:if="${!isNew}">
+      <label for="file">Приложить материал (pdf, картинка, архив…)</label>
+      <input class="ss-input" id="file" type="file" name="file">
+    </div>
+
+    <label class="ss-check">
+      <input type="checkbox" th:field="*{published}">
+      <span>Опубликован — ученики его видят</span>
+    </label>
+
+    <div class="ss-actions">
+      <button class="ss-btn ss-btn--primary" type="submit">
+        <i data-lucide="save" aria-hidden="true"></i> Сохранить урок
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{'/teacher/courses/' + ${course.id}}">К курсу</a>
+    </div>
+  </form>
+
+  <div th:if="${!isNew}" class="ss-grid2" style="margin-top:22px">
+    <div class="ss-card ss-reveal">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+        <div class="ss-course__chip ss-acc--sun" style="width:38px;height:38px"><i data-lucide="zap" style="width:18px;height:18px" aria-hidden="true"></i></div>
+        <div style="flex:1">
+          <b>Тест урока</b>
+          <div class="ss-tiny" th:if="${quiz != null}" th:text="${quiz.title}">тест есть</div>
+          <div class="ss-tiny" th:if="${quiz == null}">ещё не создан</div>
+        </div>
+      </div>
+      <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/teacher/lessons/' + ${lesson.id} + '/quiz'}"
+         th:text="${quiz != null} ? 'Конструктор теста' : 'Создать тест'">Создать тест</a>
+    </div>
+
+    <div class="ss-card ss-reveal" style="--d:.08s">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+        <div class="ss-course__chip ss-acc--sky" style="width:38px;height:38px"><i data-lucide="pencil-line" style="width:18px;height:18px" aria-hidden="true"></i></div>
+        <div style="flex:1">
+          <b>Домашнее задание</b>
+          <div class="ss-tiny" th:if="${homework != null}" th:text="${homework.title}">дз есть</div>
+          <div class="ss-tiny" th:if="${homework == null}">ещё не создано</div>
+        </div>
+      </div>
+      <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/teacher/lessons/' + ${lesson.id} + '/homework'}"
+         th:text="${homework != null} ? 'Редактировать задание' : 'Создать задание'">Создать задание</a>
+    </div>
+  </div>
+
+  <section th:if="${!isNew && !#lists.isEmpty(attachments)}" style="margin-top:22px" class="ss-reveal">
+    <p class="ss-kicker">Материалы</p>
+    <div class="ss-rowcard" th:each="a : ${attachments}">
+      <i data-lucide="paperclip" aria-hidden="true" style="color:var(--sun-3)"></i>
+      <span style="flex:1" th:text="${a.originalName}">файл</span>
+      <form th:action="@{'/teacher/attachments/' + ${a.id} + '/delete'}" method="post"
+            onsubmit="return confirm('Удалить вложение?')">
+        <div th:replace="~{fragments/logo :: csrf}"></div>
+        <button class="ss-iconbtn" type="submit" aria-label="Удалить вложение">✕</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Проверка попытки')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:760px">
+  <p class="ss-kicker ss-reveal" th:text="${attempt.quiz.lesson.course.title}">Курс</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Проверка открытых ответов</h1>
+  <p class="ss-hint ss-reveal">
+    Ученик: <b th:text="${attempt.student.fullName}">Имя</b> · тест
+    «<span th:text="${attempt.quiz.title}">Тест</span>» · попытка <span th:text="${attempt.attemptNo}">1</span>
+  </p>
+
+  <form th:action="@{'/teacher/review/' + ${attempt.id}}" method="post">
+    <div th:replace="~{fragments/logo :: csrf}"></div>
+
+    <div class="ss-card ss-reveal" th:each="a : ${openAnswers}" style="margin-bottom:16px">
+      <p class="ss-q__text">
+        <span th:text="${a.question.text}">Вопрос</span>
+        <span class="ss-q__points" th:text="|· максимум ${a.question.points} балл(ов)|"></span>
+      </p>
+      <div style="padding:10px 14px;background:var(--surface-2);border-radius:10px;margin-bottom:12px">
+        <b class="ss-tiny">Ответ ученика:</b>
+        <p style="margin:6px 0 0;white-space:pre-wrap" th:text="${a.payload != null ? a.payload : '— (пустой ответ)'}">ответ</p>
+      </div>
+      <div class="ss-field" style="margin-bottom:0;max-width:200px">
+        <label th:for="|q_${a.question.id}|" th:text="|Оценка (0–${a.question.points})|">Оценка</label>
+        <input class="ss-input" th:id="|q_${a.question.id}|" type="number"
+               th:name="'q_' + ${a.question.id}" min="0" th:max="${a.question.points}"
+               th:value="${a.question.points}" required>
+      </div>
+    </div>
+
+    <div class="ss-actions" style="margin:16px 0 40px">
+      <button class="ss-btn ss-btn--primary" type="submit">
+        <i data-lucide="check" aria-hidden="true"></i> Выставить итоговую оценку
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{/teacher/review}">Назад к списку</a>
+    </div>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Панель учителя')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section">
+  <div class="ss-profile ss-reveal">
+    <div class="ss-profile__ava" th:text="${me.fullName.split(' ')[0].substring(0,1)}">М</div>
+    <div class="ss-profile__info">
+      <h1 th:text="|Панель учителя|">Панель учителя</h1>
+      <p class="ss-mut" style="margin:0" th:text="${me.fullName}">Мария Солнцева</p>
+    </div>
+    <div style="margin-left:auto" class="ss-actions">
+      <a class="ss-btn ss-btn--outline" th:href="@{/teacher/submissions}">
+        <i data-lucide="inbox" aria-hidden="true"></i> Проверка работ
+        <span class="ss-badge ss-badge--warn" th:if="${gradeCount > 0}" th:text="${gradeCount}">0</span>
+      </a>
+      <a class="ss-btn ss-btn--outline" th:href="@{/teacher/review}">
+        <i data-lucide="message-square" aria-hidden="true"></i> Открытые ответы
+        <span class="ss-badge ss-badge--warn" th:if="${reviewCount > 0}" th:text="${reviewCount}">0</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="ss-counters ss-reveal" style="margin-bottom:30px">
+    <div class="ss-counter"><b data-target="${#lists.size(courses)}">0</b><small>моих курсов</small></div>
+    <div class="ss-counter"><b data-target="${gradeCount}">0</b><small>работ ждут проверки</small></div>
+    <div class="ss-counter"><b data-target="${reviewCount}">0</b><small>тестов с открытыми ответами</small></div>
+  </div>
+
+  <p class="ss-kicker ss-reveal">Мои курсы</p>
+  <h2 class="ss-reveal">Управляй своими рассветами</h2>
+  <div class="ss-cards">
+    <article class="ss-course ss-reveal" th:each="cc, iter : ${courses}"
+             th:classappend="|ss-acc--${cc.course.accent}|"
+             th:styleappend="'--d:' + ${(iter.index % 3) * 0.08} + 's'">
+      <div class="ss-course__inner">
+        <small th:text="|${cc.course.subject.label} · ${cc.course.grade} класс|">Предмет</small>
+        <h3 th:text="${cc.course.title}">Курс</h3>
+        <p class="ss-tiny" style="margin:0">
+          <span th:text="${cc.students}">0</span> учеников · <span th:text="${cc.lessons}">0</span> уроков
+          <span class="ss-badge ss-badge--warn" th:if="${!cc.course.published}" style="margin-left:6px"><i></i>черновик</span>
+          <span class="ss-badge ss-badge--ok" th:if="${cc.course.published}" style="margin-left:6px"><i></i>опубликован</span>
+        </p>
+        <div class="ss-course__foot">
+          <span class="ss-badge ss-badge--danger" th:if="${cc.newHomeworks > 0}">
+            <i></i><span th:text="|${cc.newHomeworks} на проверке|">0</span>
+          </span>
+          <span th:if="${cc.newHomeworks == 0}"></span>
+          <a class="ss-btn ss-btn--primary ss-btn--sm" th:href="@{'/teacher/courses/' + ${cc.course.id}}">Управлять</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="ss-course ss-reveal ss-acc--sun" style="cursor:default">
+      <div class="ss-course__inner" style="justify-content:center;text-align:center;min-height:220px">
+        <div class="ss-course__chip" style="margin:0 auto 12px"><i data-lucide="plus" aria-hidden="true"></i></div>
+        <h3>Новый курс</h3>
+        <p>Создай курс за минуту — уроки добавим потом.</p>
+        <div class="ss-course__foot" style="justify-content:center">
+          <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{/teacher/courses/new}">Создать курс</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Проверка работ')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:820px">
+  <p class="ss-kicker ss-reveal">Панель учителя</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Проверка домашних работ</h1>
+
+  <form class="ss-card ss-reveal" th:action="@{/teacher/submissions}" method="get" style="margin-bottom:22px">
+    <div class="ss-row" style="margin-bottom:0">
+      <div class="ss-field" style="flex:1;max-width:380px;margin-bottom:0">
+        <label for="courseId">Курс</label>
+        <select class="ss-select" id="courseId" name="courseId">
+          <option value="">Все мои курсы</option>
+          <option th:each="c : ${myCourses}" th:value="${c.id}" th:text="${c.title}"
+                  th:selected="${courseId != null && courseId == c.id}">Курс</option>
+        </select>
+      </div>
+      <button class="ss-btn ss-btn--primary" type="submit">Показать</button>
+    </div>
+  </form>
+
+  <div th:if="${#lists.isEmpty(submissions)}" class="ss-empty ss-reveal">
+    <p>Сданных работ нет — можно выпить чаю с лимоном. ☀️</p>
+  </div>
+
+  <div class="ss-card ss-reveal" th:each="s : ${submissions}" style="margin-bottom:18px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <span class="ss-profile__ava" style="width:40px;height:40px;font-size:16px"
+            th:text="${s.student.fullName.split(' ')[0].substring(0,1)}">А</span>
+      <div style="flex:1;min-width:180px">
+        <b th:text="${s.student.fullName}">Ученик</b>
+        <div class="ss-tiny" th:text="|${s.homework.lesson.course.title} · ${s.homework.title}|">Курс · ДЗ</div>
+      </div>
+      <span class="ss-badge ss-badge--info" th:if="${s.status.name() == 'SUBMITTED'}"><i></i>Сдано — жду оценки</span>
+      <span class="ss-badge ss-badge--warn" th:if="${s.status.name() == 'REVISION'}"><i></i>На доработке</span>
+      <span class="ss-badge ss-badge--ok" th:if="${s.status.name() == 'ACCEPTED'}">
+        <i></i>Принято <span th:if="${s.score != null}" th:text="|${s.score}/${s.homework.maxPoints}|"></span>
+      </span>
+      <span class="ss-tiny" th:text="|сдано: ${T(ru.schoolsun.common.Dates).fmt(s.submittedAt)}|">дата</span>
+    </div>
+
+    <div th:if="${s.textAnswer != null && !#strings.isEmpty(s.textAnswer)}"
+         style="padding:10px 14px;background:var(--surface-2);border-radius:10px;margin-bottom:10px">
+      <b class="ss-tiny">Ответ ученика:</b>
+      <p style="margin:6px 0 0;white-space:pre-wrap" th:text="${s.textAnswer}">текст</p>
+    </div>
+
+    <div th:if="${s.originalName != null}" class="ss-rowcard" style="margin-bottom:10px">
+      <i data-lucide="file-text" aria-hidden="true" style="color:var(--sun-3)"></i>
+      <span style="flex:1" th:text="${s.originalName}">файл</span>
+      <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/files/homework/' + ${s.id}}">Скачать</a>
+    </div>
+
+    <div th:if="${s.feedback != null}" class="ss-tiny" style="margin-bottom:10px"
+         th:text="|Предыдущий комментарий: ${s.feedback}|"></div>
+
+    <form class="ss-row" style="margin-bottom:0;align-items:flex-end"
+          th:action="@{'/teacher/submissions/' + ${s.id} + '/grade'}" method="post">
+      <div th:replace="~{fragments/logo :: csrf}"></div>
+      <div class="ss-field" style="flex:0 0 110px;margin-bottom:0">
+        <label th:for="|score-${s.id}|">Балл (0–<span th:text="${s.homework.maxPoints}">10</span>)</label>
+        <input class="ss-input" th:id="|score-${s.id}|" type="number" name="score" min="0"
+               th:max="${s.homework.maxPoints}" th:value="${s.score != null} ? ${s.score} : ${s.homework.maxPoints}" required>
+      </div>
+      <div class="ss-field" style="flex:0 0 190px;margin-bottom:0">
+        <label th:for="|status-${s.id}|">Решение</label>
+        <select class="ss-select" th:id="|status-${s.id}|" name="status">
+          <option value="ACCEPTED">Принято ✓</option>
+          <option value="REVISION">На доработку ↩</option>
+          <option value="SUBMITTED">Ещё раз проверить</option>
+        </select>
+      </div>
+      <div class="ss-field" style="flex:1;min-width:200px;margin-bottom:0">
+        <label th:for="|fb-${s.id}|">Комментарий ученику</label>
+        <input class="ss-input" th:id="|fb-${s.id}|" type="text" name="feedback" th:value="${s.feedback}"
+               placeholder="Что сделано хорошо, что поправить…">
+      </div>
+      <button class="ss-btn ss-btn--primary" type="submit">Оценить</button>
+    </form>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

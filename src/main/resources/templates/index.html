@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Главная')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('home')}"></header>
+
+<main>
+  <section class="ss-hero" id="ss-hero">
+    <div class="ss-hero__parallax" id="ss-hero-parallax" aria-hidden="true">
+      <div class="ss-hero__rays"></div>
+      <div class="ss-hero__sun"></div>
+    </div>
+    <div class="ss-stars" id="ss-stars" aria-hidden="true"></div>
+    <div class="ss-particles" id="ss-particles" aria-hidden="true"></div>
+    <div class="ss-hero__content ss-reveal">
+      <p class="ss-hero__kicker">Образовательная платформа</p>
+      <h1>Учись на рассвете.<br><span>Свети ярче.</span></h1>
+      <p class="ss-hero__sub">Курсы для школьников с автопроверкой тестов, живым рейтингом и учителями рядом.
+        Новый урок — как новый день: начинается с восхода.</p>
+      <div class="ss-hero__cta">
+        <a class="ss-btn ss-btn--primary ss-btn--lg" th:href="@{/register}">Начать учиться</a>
+        <a class="ss-btn ss-btn--glass ss-btn--lg" th:href="@{/courses}">Каталог курсов</a>
+      </div>
+    </div>
+    <svg class="ss-wave" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,74 C240,112 480,18 720,52 C960,86 1200,26 1440,58 L1440,110 L0,110 Z" fill="rgba(255,255,255,.35)"/>
+      <path d="M0,86 C260,120 520,40 760,66 C1000,92 1240,44 1440,72 L1440,110 L0,110 Z" fill="var(--bg)"/>
+    </svg>
+  </section>
+
+  <section class="ss-section">
+    <p class="ss-kicker ss-reveal">Как это работает</p>
+    <h2 class="ss-reveal">Платформа, где тепло учиться</h2>
+    <div class="ss-grid3">
+      <div class="ss-card ss-reveal" style="--d:.05s">
+        <div class="ss-course__chip ss-acc--sun" style="margin-bottom:12px"><i data-lucide="book-open" aria-hidden="true"></i></div>
+        <h3>Теория понятным языком</h3>
+        <p class="ss-mut">Уроки с текстом, видео и вложениями. Читай в удобное время, возвращайся к сложному.</p>
+      </div>
+      <div class="ss-card ss-reveal" style="--d:.1s">
+        <div class="ss-course__chip ss-acc--sky" style="margin-bottom:12px"><i data-lucide="zap" aria-hidden="true"></i></div>
+        <h3>Тесты с автопроверкой</h3>
+        <p class="ss-mut">Мгновенный результат: что усвоено, а что повторить. Несколько попыток и таймер — как на экзамене.</p>
+      </div>
+      <div class="ss-card ss-reveal" style="--d:.15s">
+        <div class="ss-course__chip ss-acc--ember" style="margin-bottom:12px"><i data-lucide="award" aria-hidden="true"></i></div>
+        <h3>Рейтинг и сертификаты</h3>
+        <p class="ss-mut">Соревнуйся с одноклассниками в лидерборде и получи сертификат SCHOOLSUN по завершении курса.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ss-section">
+    <p class="ss-kicker ss-reveal">Платформа в цифрах</p>
+    <div class="ss-counters ss-reveal">
+      <div class="ss-counter"><b data-target="${statStudents}">0</b><small>учеников</small></div>
+      <div class="ss-counter"><b data-target="${statCourses}">0</b><small>курсов</small></div>
+      <div class="ss-counter"><b data-target="${statLessons}">0</b><small>уроков</small></div>
+    </div>
+  </section>
+
+  <section class="ss-section">
+    <p class="ss-kicker ss-reveal">Популярное</p>
+    <h2 class="ss-reveal">Курсы, которые выбирают</h2>
+    <div class="ss-cards">
+      <article class="ss-course ss-reveal" th:each="c, iter : ${topCourses}"
+               th:classappend="|ss-acc--${c.accent}|" th:styleappend="'--d:' + ${(iter.index % 3) * 0.08} + 's'">
+        <div class="ss-course__inner">
+          <div class="ss-course__chip">
+            <i data-lucide="sigma" th:if="${c.subject.name() == 'MATH'}" aria-hidden="true"></i>
+            <i data-lucide="atom" th:if="${c.subject.name() == 'PHYSICS'}" aria-hidden="true"></i>
+            <i data-lucide="code" th:if="${c.subject.name() == 'CS'}" aria-hidden="true"></i>
+            <i data-lucide="flask-conical" th:if="${c.subject.name() == 'CHEMISTRY'}" aria-hidden="true"></i>
+            <i data-lucide="leaf" th:if="${c.subject.name() == 'BIOLOGY'}" aria-hidden="true"></i>
+            <i data-lucide="globe" th:if="${c.subject.name() == 'LANG'}" aria-hidden="true"></i>
+            <i data-lucide="graduation-cap" th:if="${c.subject.name() == 'HISTORY' or c.subject.name() == 'OTHER'}" aria-hidden="true"></i>
+          </div>
+          <small th:text="|${c.subject.label} · ${c.grade} класс|">Математика · 9 класс</small>
+          <h3><a th:href="@{'/courses/' + ${c.slug}}" th:text="${c.title}">Курс</a></h3>
+          <p th:text="${#strings.abbreviate(c.description, 110)}">Описание</p>
+          <div class="ss-course__foot">
+            <span class="ss-mut ss-tiny" th:text="${c.teacher.fullName}">Учитель</span>
+            <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/courses/' + ${c.slug}}">Открыть</a>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p style="margin-top:22px" class="ss-reveal">
+      <a class="ss-btn ss-btn--ghost" th:href="@{/courses}">Все курсы <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </p>
+  </section>
+
+  <section class="ss-section">
+    <div class="ss-card ss-reveal" style="text-align:center;background:var(--grad-sun);border:none;color:#3A2A00">
+      <h2 style="margin:0 0 8px">Готов к новому рассвету?</h2>
+      <p style="margin:0 0 18px;opacity:.85">Зарегистрируйся за минуту и запишись на первый курс уже сегодня.</p>
+      <a class="ss-btn" style="background:#1B2A4A;color:#fff" th:href="@{/register}">Создать аккаунт</a>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

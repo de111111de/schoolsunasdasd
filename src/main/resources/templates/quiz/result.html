@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Результат теста')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('student')}"></header>
+
+<main class="ss-section" style="max-width:780px">
+  <div th:if="${passed}" data-confetti="1"></div>
+
+  <div class="ss-card ss-reveal" style="text-align:center"
+       th:styleappend="${passed} ? 'border:2px solid var(--sun-2)' : ''">
+    <div class="ss-ringbox" style="margin:0 auto 10px" th:if="${!pending}">
+      <svg viewBox="0 0 140 140" role="img" th:aria-label="|Результат ${percent} процентов|">
+        <defs>
+          <linearGradient id="ss-rg" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#FFD93D"/><stop offset="1" stop-color="#FF8C42"/>
+          </linearGradient>
+        </defs>
+        <circle cx="70" cy="70" r="58" fill="none" stroke="var(--track)" stroke-width="12"/>
+        <circle class="ss-ring__val" cx="70" cy="70" r="58" fill="none" stroke="url(#ss-rg)" stroke-width="12"
+                stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"
+                transform="rotate(-90 70 70)" th:attr="data-val=${percent}"/>
+      </svg>
+      <b class="ss-ring__num" th:text="|${percent}%|">0%</b>
+    </div>
+
+    <h1 style="margin:8px 0 6px" th:if="${passed}">Тест сдан! 🌞</h1>
+    <h1 style="margin:8px 0 6px" th:if="${!passed && !pending}">Почти получилось!</h1>
+    <h1 style="margin:8px 0 6px" th:if="${pending}">Ответы отправлены учителю</h1>
+
+    <p class="ss-mut" style="margin:0" th:if="${passed}">Солнечные лучи аплодируют стоя. Урок вот-вот засчитается.</p>
+    <p class="ss-mut" style="margin:0" th:if="${!passed && !pending}"
+       th:text="|Набрано ${attempt.score} баллов — этого мало для зачёта, но у тебя есть ещё попытки.|"></p>
+    <p class="ss-mut" style="margin:0" th:if="${pending}">
+      Открытые ответы проверит учитель — результат появится после проверки.
+    </p>
+
+    <div class="ss-actions" style="justify-content:center;margin-top:18px">
+      <a class="ss-btn ss-btn--primary" th:href="@{'/student/lessons/' + ${lesson.id}}">Вернуться к уроку</a>
+      <a class="ss-btn ss-btn--ghost" th:href="@{/student}">В кабинет</a>
+    </div>
+  </div>
+
+  <section th:if="${!pending}" style="margin-top:26px">
+    <p class="ss-kicker ss-reveal">Разбор ответов</p>
+    <div class="ss-card ss-reveal" th:each="row, iter : ${rows}" style="margin-bottom:14px">
+      <p class="ss-q__text" style="margin-bottom:10px">
+        <span class="ss-mut" th:text="|${iter.index + 1}. |">1. </span>
+        <span th:text="${row.question.text}">Вопрос</span>
+        <span class="ss-badge ss-badge--ok" style="margin-left:8px" th:if="${row.answerCorrect != null && row.answerCorrect}"><i></i>верно</span>
+        <span class="ss-badge ss-badge--danger" style="margin-left:8px" th:if="${row.answerCorrect != null && !row.answerCorrect}"><i></i>ошибка</span>
+      </p>
+
+      <div th:if="${row.question.type.name() == 'SINGLE' or row.question.type.name() == 'MULTI'}">
+        <div class="ss-opt" style="cursor:default;margin-bottom:6px" th:each="o : ${row.options}"
+             th:classappend="${row.showCorrect && o.correct} ? ss-answer-correct : (${row.answer != null && row.answer.payload != null && row.answer.payload.contains(o.id.toString()) && !o.correct} ? ss-answer-wrong : '')">
+          <i data-lucide="check" aria-hidden="true" th:if="${row.showCorrect && o.correct}"></i>
+          <i data-lucide="x" aria-hidden="true" th:if="${row.answer != null && row.answer.payload != null && row.answer.payload.contains(o.id.toString()) && !o.correct}"></i>
+          <span th:text="${o.text}">Вариант</span>
+        </div>
+      </div>
+
+      <div th:if="${row.question.type.name() == 'MATCH'}">
+        <p class="ss-tiny" style="margin:0 0 6px">Правильные пары:</p>
+        <div class="ss-opt ss-answer-correct" style="cursor:default;margin-bottom:6px" th:each="o : ${row.options}">
+          <span style="flex:1" th:text="${o.text}">Левая</span>
+          <b th:text="${o.pairKey}">Правая</b>
+        </div>
+      </div>
+
+      <div th:if="${row.question.type.name() == 'NUMBER' or row.question.type.name() == 'TEXT'}">
+        <p class="ss-tiny" style="margin:0">
+          Твой ответ: <b th:text="${row.answer != null ? row.answer.payload : '—'}">—</b>
+          <span th:if="${row.showCorrect}"> · Правильный: <b th:text="${row.question.answerText}">ответ</b></span>
+        </p>
+      </div>
+
+      <div th:if="${row.question.type.name() == 'OPEN'}">
+        <p class="ss-tiny" style="margin:0">Открытый ответ — проверит учитель.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

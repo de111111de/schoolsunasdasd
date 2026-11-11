@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Каталог курсов')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('courses')}"></header>
+
+<main class="ss-section">
+  <p class="ss-kicker ss-reveal">Каталог</p>
+  <h2 class="ss-reveal" style="margin-bottom:10px">Курсы SCHOOLSUN</h2>
+  <p class="ss-hint ss-reveal">Найди свой курс: фильтруй по предмету и классу или воспользуйся поиском.</p>
+
+  <form class="ss-card ss-reveal" th:action="@{/courses}" method="get" style="margin-bottom:26px">
+    <div class="ss-row" style="margin-bottom:0">
+      <div class="ss-field" style="flex:2 1 260px;max-width:420px;margin-bottom:0">
+        <label for="q">Поиск</label>
+        <input class="ss-input" id="q" type="text" name="q" th:value="${q}" placeholder="Например: функции, Python…">
+      </div>
+      <div class="ss-field" style="margin-bottom:0">
+        <label for="subject">Предмет</label>
+        <select class="ss-select" id="subject" name="subject">
+          <option value="">Все предметы</option>
+          <option th:each="s : ${subjects}" th:value="${s.name()}" th:text="${s.label}"
+                  th:selected="${selSubject != null && selSubject.name() == s.name()}">Предмет</option>
+        </select>
+      </div>
+      <div class="ss-field" style="margin-bottom:0">
+        <label for="grade">Класс</label>
+        <select class="ss-select" id="grade" name="grade">
+          <option value="">Любой</option>
+          <option th:each="g : ${#numbers.sequence(5, 11)}" th:value="${g}" th:text="|${g} класс|"
+                  th:selected="${selGrade != null && selGrade == g}">Класс</option>
+        </select>
+      </div>
+      <button class="ss-btn ss-btn--primary" type="submit">
+        <i data-lucide="search" aria-hidden="true"></i> Найти
+      </button>
+    </div>
+  </form>
+
+  <div class="ss-cards" th:if="${!#lists.isEmpty(courses)}">
+    <article class="ss-course ss-reveal" th:each="c, iter : ${courses}"
+             th:classappend="|ss-acc--${c.accent}|" th:styleappend="'--d:' + ${(iter.index % 3) * 0.08} + 's'">
+      <div class="ss-course__inner">
+        <div class="ss-course__chip">
+          <i data-lucide="sigma" th:if="${c.subject.name() == 'MATH'}" aria-hidden="true"></i>
+          <i data-lucide="atom" th:if="${c.subject.name() == 'PHYSICS'}" aria-hidden="true"></i>
+          <i data-lucide="code" th:if="${c.subject.name() == 'CS'}" aria-hidden="true"></i>
+          <i data-lucide="flask-conical" th:if="${c.subject.name() == 'CHEMISTRY'}" aria-hidden="true"></i>
+          <i data-lucide="leaf" th:if="${c.subject.name() == 'BIOLOGY'}" aria-hidden="true"></i>
+          <i data-lucide="globe" th:if="${c.subject.name() == 'LANG'}" aria-hidden="true"></i>
+          <i data-lucide="graduation-cap" th:if="${c.subject.name() == 'HISTORY' or c.subject.name() == 'OTHER'}" aria-hidden="true"></i>
+        </div>
+        <small th:text="|${c.subject.label} · ${c.grade} класс|">Математика · 9 класс</small>
+        <h3><a th:href="@{'/courses/' + ${c.slug}}" th:text="${c.title}">Курс</a></h3>
+        <p th:text="${#strings.abbreviate(c.description, 120)}">Описание</p>
+        <div class="ss-course__foot">
+          <span class="ss-mut ss-tiny" th:text="${c.teacher.fullName}">Учитель</span>
+          <a class="ss-btn ss-btn--outline ss-btn--sm" th:href="@{'/courses/' + ${c.slug}}">Подробнее</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="ss-empty ss-reveal" th:if="${#lists.isEmpty(courses)}">
+    <h3>Ничего не нашлось</h3>
+    <p>Попробуй изменить фильтры или поискать по другому слову.</p>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

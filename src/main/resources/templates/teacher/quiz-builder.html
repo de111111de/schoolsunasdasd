@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Конструктор теста')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('teacher')}"></header>
+
+<main class="ss-section" style="max-width:820px">
+  <p class="ss-kicker ss-reveal" th:text="|${lesson.course.title} · урок ${lesson.position}|">Курс</p>
+  <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Конструктор теста</h1>
+  <p class="ss-hint ss-reveal">
+    Шесть типов вопросов: одиночный и множественный выбор, соответствие, ввод числа, краткий ответ и открытый ответ
+    (его проверяет учитель вручную).
+  </p>
+
+  <div id="ss-quiz-builder" class="ss-reveal" th:attr="data-quiz=${quizJson},data-save-url=@{'/teacher/lessons/' + ${lesson.id} + '/quiz'}">
+    <div class="ss-card" style="margin-bottom:18px">
+      <p class="ss-kicker" style="margin-bottom:10px">Настройки теста</p>
+      <div class="ss-row">
+        <div class="ss-field" style="flex:2;margin-bottom:0">
+          <label for="qb-title">Название</label>
+          <input class="ss-input" id="qb-title" type="text" placeholder="Проверка: линейная функция">
+        </div>
+        <div class="ss-field" style="flex:1;margin-bottom:0">
+          <label for="qb-time">Лимит времени (мин, 0 — без лимита)</label>
+          <input class="ss-input" id="qb-time" type="number" min="0" max="180" value="5">
+        </div>
+        <div class="ss-field" style="flex:1;margin-bottom:0">
+          <label for="qb-attempts">Попыток</label>
+          <input class="ss-input" id="qb-attempts" type="number" min="1" max="10" value="3">
+        </div>
+      </div>
+      <label class="ss-check" style="margin:0">
+        <input type="checkbox" id="qb-show" checked>
+        <span>Показывать правильные ответы после сдачи</span>
+      </label>
+    </div>
+
+    <div id="qb-questions"></div>
+
+    <div class="ss-actions" style="margin:18px 0 40px">
+      <button class="ss-btn ss-btn--outline" id="qb-add" type="button">
+        <i data-lucide="plus" aria-hidden="true"></i> Добавить вопрос
+      </button>
+      <button class="ss-btn ss-btn--primary" id="qb-save" type="button">
+        <i data-lucide="save" aria-hidden="true"></i> Сохранить тест
+      </button>
+      <a class="ss-btn ss-btn--ghost" th:href="@{'/teacher/lessons/' + ${lesson.id}}">К уроку</a>
+      <span id="qb-status" class="ss-tiny"></span>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/quiz-builder.js}" defer></script>
+</body>
+</html>

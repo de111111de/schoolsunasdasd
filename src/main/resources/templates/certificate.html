@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Сертификат')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+
+<main>
+  <div class="ss-cert ss-reveal">
+    <div style="display:flex;justify-content:center;margin-bottom:6px">
+      <svg width="56" height="56" viewBox="0 0 64 64" aria-hidden="true" style="color:#1B2A4A">
+        <g class="ss-logo__rays" stroke="#FFB347" stroke-width="3.4" stroke-linecap="round">
+          <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
+          <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
+          <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
+          <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
+        </g>
+        <circle cx="32" cy="26" r="11" fill="#FFD93D"/>
+        <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="currentColor"/>
+      </svg>
+    </div>
+    <p class="ss-cert__brand" style="margin:0">SCHOOLSUN — ШКОЛА СОЛНЦА</p>
+    <h1>Сертификат</h1>
+    <p class="ss-mut" style="margin:0">награждается</p>
+    <p class="ss-cert__name" th:text="${cert.student.fullName}">Имя Фамилия</p>
+    <p class="ss-mut" style="margin:0">за успешное прохождение курса</p>
+    <p style="margin:8px 0 0;font-family:var(--font-head);font-weight:700;font-size:20px;color:var(--ink)"
+       th:text="|«${cert.course.title}»|">«Курс»</p>
+    <p class="ss-cert__serial">
+      Дата выдачи: <span th:text="${date}">01.01.2026</span> · Серийный номер:
+      <span th:text="${cert.serialNumber}">SCHOOLSUN-2026-000001</span>
+    </p>
+  </div>
+
+  <div class="ss-actions" style="justify-content:center;margin-bottom:50px">
+    <a class="ss-btn ss-btn--primary ss-btn--lg" th:href="@{'/certificates/' + ${cert.serialNumber} + '/pdf'}">
+      <i data-lucide="download" aria-hidden="true"></i> Скачать PDF
+    </a>
+    <a class="ss-btn ss-btn--ghost" th:href="@{/}">На главную</a>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

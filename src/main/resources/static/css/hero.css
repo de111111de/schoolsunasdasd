@@ -1,0 +1,103 @@
+/* ---------- hero лендинга «восход солнца» ---------- */
+.ss-hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 70px 22px 190px;
+  background: linear-gradient(180deg, #223A6D 0%, #4A5D9E 38%, #FF9A5A 80%, #FFD93D 100%);
+}
+
+.ss-hero__parallax {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform .25s ease-out;
+  will-change: transform;
+}
+
+.ss-hero__rays {
+  position: absolute;
+  left: calc(50% - 180px);
+  top: calc(34% - 180px);
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 217, 61, .5) 0deg 6deg, transparent 6deg 30deg);
+  -webkit-mask: radial-gradient(circle, transparent 33%, #000 35%, #000 60%, transparent 63%);
+  mask: radial-gradient(circle, transparent 33%, #000 35%, #000 60%, transparent 63%);
+  animation: ss-spin 80s linear infinite;
+  opacity: .7;
+}
+
+.ss-hero__sun {
+  position: absolute;
+  left: calc(50% - 75px);
+  top: calc(34% - 75px);
+  width: 150px; height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #FFF3B0 0%, #FFD93D 45%, #FF8C42 100%);
+  box-shadow: 0 0 60px 24px var(--glow), 0 0 150px 70px rgba(255, 141, 66, .28);
+  animation: ss-rise 1.8s cubic-bezier(.2, .7, .3, 1) both, ss-float 7s ease-in-out 1.8s infinite alternate;
+}
+
+.ss-stars { position: absolute; inset: 0; opacity: 0; transition: opacity .8s; pointer-events: none; z-index: 1; }
+:root[data-night] .ss-stars { opacity: 1; }
+.ss-stars i {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  animation: ss-twinkle 3s ease-in-out infinite;
+}
+
+.ss-particles { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.ss-particles span {
+  position: absolute;
+  bottom: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFE9A8, #FFB347);
+  opacity: 0;
+  animation: ss-pfloat linear infinite;
+}
+
+.ss-hero__content { position: relative; z-index: 2; max-width: 660px; margin: 170px auto 0; }
+.ss-hero__kicker {
+  margin: 0 0 12px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #FFE9A8;
+}
+.ss-hero__content h1 {
+  margin: 0 0 14px;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.12;
+  color: #fff;
+  text-shadow: 0 2px 26px rgba(27, 42, 74, .4);
+}
+.ss-hero__content h1 span {
+  background: linear-gradient(120deg, #FFF3B0, #FFB347);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ss-hero__sub { margin: 0 auto 26px; max-width: 520px; color: rgba(255, 255, 255, .88); font-size: 15px; }
+.ss-hero__cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+.ss-wave {
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  width: 100%;
+  height: 90px;
+  display: block;
+  z-index: 3;
+}
+
+@media (max-width: 640px) {
+  .ss-hero { padding: 56px 18px 170px; }
+  .ss-hero__content { margin-top: 140px; }
+  .ss-hero__content h1 { font-size: 30px; }
+}

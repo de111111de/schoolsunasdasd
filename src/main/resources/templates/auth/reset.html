@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Новый пароль')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <h1>Новый пароль</h1>
+    <p class="ss-mut">Придумай пароль, который не забудешь</p>
+
+    <div class="ss-error" role="alert" th:if="${error}" th:text="${error}">Ошибка</div>
+
+    <form th:action="@{/reset-password}" method="post">
+      <div th:replace="~{fragments/logo :: csrf}"></div>
+      <input type="hidden" name="token" th:value="${token}">
+      <div class="ss-field">
+        <label for="password">Новый пароль</label>
+        <input class="ss-input" id="password" type="password" name="password" required minlength="6" placeholder="••••••••">
+      </div>
+      <div class="ss-field">
+        <label for="password2">Повтори пароль</label>
+        <input class="ss-input" id="password2" type="password" name="password2" required minlength="6" placeholder="••••••••">
+      </div>
+      <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit" style="width:100%">Сохранить пароль</button>
+    </form>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/head :: head('Регистрация')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('')}"></header>
+
+<main class="ss-auth">
+  <div class="ss-auth__card">
+    <svg class="ss-auth__sun" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="color:#1B2A4A">
+      <g class="ss-logo__rays" stroke="#FFB347" stroke-width="3.4" stroke-linecap="round">
+        <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
+        <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
+        <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
+        <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
+      </g>
+      <circle cx="32" cy="26" r="11" fill="#FFD93D"/>
+      <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="currentColor"/>
+    </svg>
+    <h1>Добро пожаловать!</h1>
+    <p class="ss-mut">Минута — и ты часть школы солнца</p>
+
+    <div class="ss-error" role="alert" th:if="${error}" th:text="${error}">Ошибка</div>
+
+    <form th:action="@{/register}" th:object="${form}" method="post">
+      <div th:replace="~{fragments/logo :: csrf}"></div>
+      <div class="ss-field">
+        <label for="fullName">Имя и фамилия</label>
+        <input class="ss-input" id="fullName" type="text" th:field="*{fullName}" required placeholder="Аня Солнцева">
+      </div>
+      <div class="ss-field">
+        <label for="email">Email</label>
+        <input class="ss-input" id="email" type="email" th:field="*{email}" required placeholder="solntse@schoolsun.ru">
+      </div>
+      <div class="ss-field">
+        <label for="password">Пароль (минимум 6 символов)</label>
+        <input class="ss-input" id="password" type="password" th:field="*{password}" required minlength="6" placeholder="••••••••">
+      </div>
+      <div class="ss-field">
+        <label>Кто ты?</label>
+        <label class="ss-opt">
+          <input type="radio" name="role" value="STUDENT" th:checked="*{role == 'STUDENT' || role == null}">
+          <span>Ученик — прохожу курсы и сдаю задания</span>
+        </label>
+        <label class="ss-opt">
+          <input type="radio" name="role" value="TEACHER" th:checked="*{role == 'TEACHER'}">
+          <span>Учитель — создаю курсы и проверяю работы</span>
+        </label>
+      </div>
+      <button class="ss-btn ss-btn--primary ss-btn--lg" type="submit" style="width:100%">Создать аккаунт</button>
+    </form>
+
+    <div class="ss-auth__links">
+      <p style="margin:0">Уже есть аккаунт? <a th:href="@{/login}">Войди</a></p>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

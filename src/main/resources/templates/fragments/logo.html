@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<body>
+<div th:fragment="csrf" th:if="${_csrf != null}">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+</div>
+
+<svg th:fragment="logo" width="42" height="42" viewBox="0 0 64 64" aria-hidden="true" class="ss-logo-svg">
+  <defs>
+    <linearGradient id="ss-lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD93D"/><stop offset=".5" stop-color="#FFB347"/><stop offset="1" stop-color="#FF8C42"/>
+    </linearGradient>
+  </defs>
+  <g class="ss-logo__rays" stroke="url(#ss-lg)" stroke-width="3.4" stroke-linecap="round">
+    <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
+    <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
+    <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
+    <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
+  </g>
+  <circle cx="32" cy="26" r="11" fill="url(#ss-lg)"/>
+  <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="currentColor"/>
+  <path d="M32 44.6v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</svg>
+</body>
+</html>
