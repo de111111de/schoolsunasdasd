@@ -12,8 +12,9 @@
   font-family: var(--font-body);
   font-size: 14px;
   outline: none;
-  transition: border-color .2s, box-shadow .2s;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
+.ss-input:hover, .ss-textarea:hover, .ss-select:hover { border-color: var(--edge); }
 .ss-textarea { min-height: 120px; resize: vertical; }
 .ss-input::placeholder, .ss-textarea::placeholder { color: var(--ink-soft); opacity: .7; }
 .ss-input:focus, .ss-textarea:focus, .ss-select:focus {
@@ -113,7 +114,7 @@
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 12px 16px;
-  animation: ss-toast-in .5s cubic-bezier(.34, 1.56, .64, 1);
+  animation: ss-toast-in .6s var(--ease-out);
 }
 .ss-toast--error { border-left-color: #E2543F; }
 .ss-toast b { font-family: var(--font-head); font-size: 14px; }
@@ -145,11 +146,11 @@
   padding: 11px 16px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   margin-bottom: 10px;
-  transition: transform .2s;
+  transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out), border-color .3s ease;
 }
-.ss-rowcard:hover { transform: translateX(4px); }
+.ss-rowcard:hover { transform: translateX(5px); box-shadow: var(--shadow); border-color: var(--edge); }
 .ss-rowcard--top { border: 1.5px solid var(--sun-2); box-shadow: 0 6px 18px rgba(255, 179, 71, .25); }
 .ss-rowcard--me { border: 1.5px dashed var(--sun-3); }
 .ss-rowcard b { font-family: var(--font-head); }
@@ -192,8 +193,8 @@
 /* счётчики */
 .ss-counters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
 .ss-counter {
-  text-align: center;
-  padding: 20px 10px;
+  text-align: left;
+  padding: 20px 22px;
   border-radius: var(--r-md);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -201,13 +202,12 @@
 }
 .ss-counter b {
   display: block;
-  font-family: var(--font-head);
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: 30px;
-  background: var(--grad-sun);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  letter-spacing: -.04em;
+  line-height: 1.2;
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .ss-counter small { color: var(--ink-soft); font-size: 12px; font-family: var(--font-head); font-weight: 700; }

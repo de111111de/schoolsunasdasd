@@ -1,82 +1,139 @@
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 15.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background .5s ease, color .5s ease;
 }
 
+/* плёночное зерно поверх всего — фиксированный слой, не скроллится */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: .055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .1 0 0 0 0 .2 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root[data-night] body::after { opacity: .09; mix-blend-mode: soft-light; }
+@media print { body::after { display: none; } }
+
 img { max-width: 100%; }
 
-a { color: var(--sun-3); }
-a:hover { color: var(--sun-2); }
+a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; transition: color .2s ease; }
+a:hover { color: var(--sun-3); }
 
-h1, h2, h3, h4 { font-family: var(--font-head); letter-spacing: -.01em; }
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -.015em; line-height: 1.25; }
+h1 em, h2 em {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  font-size: 1.08em;
+  color: var(--sun-3);
+}
+p { text-wrap: pretty; }
+
+:focus-visible { outline: 2px solid var(--sun-3); outline-offset: 3px; border-radius: 6px; }
 
 ::selection { background: var(--sun-2); color: #3A2A00; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FFB347, #FF8C42); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: var(--sun-2); border-radius: 999px; border: 2px solid var(--bg); }
 
-.container { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
 
-.ss-section { max-width: 1080px; margin: 0 auto; padding: 54px 22px 6px; }
-.ss-section h2 { margin: 0 0 20px; font-weight: 800; font-size: 26px; }
+.ss-section { max-width: 1160px; margin: 0 auto; padding: 64px 24px 8px; }
+.ss-section h2 { margin: 0 0 22px; font-weight: 600; font-size: clamp(22px, 2.5vw, 30px); }
 
 .ss-kicker {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: .2em;
+  font-size: 11.5px;
+  letter-spacing: .18em;
   text-transform: uppercase;
+  color: var(--kicker);
+}
+.ss-kicker::before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 22px;
+  height: 2px;
+  margin: -2px 10px 0 0;
+  border-radius: 2px;
   background: var(--grad-sun);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
-.ss-hint { margin: -8px 0 18px; color: var(--ink-soft); font-size: 13px; }
+.ss-hint { margin: -8px 0 18px; color: var(--ink-soft); font-size: 14px; }
+.ss-lead { margin: 0; max-width: 46ch; color: var(--ink-soft); font-size: 17px; line-height: 1.55; }
 
 .ss-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
-  padding: 22px;
+  padding: 24px;
 }
 
-.ss-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-.ss-grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.ss-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+.ss-grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
 
 .ss-empty {
   text-align: center;
   color: var(--ink-soft);
-  padding: 40px 20px;
-  border: 1.5px dashed var(--line);
+  padding: 44px 20px;
+  border: 1.5px dashed var(--edge);
   border-radius: var(--r-lg);
+  background:
+    radial-gradient(220px circle at 50% 120%, rgba(255, 179, 71, .16), transparent 70%);
 }
+.ss-empty h3 { color: var(--ink); margin: 0 0 6px; }
 
 .ss-mut { color: var(--ink-soft); }
 .ss-tiny { font-size: 12px; color: var(--ink-soft); }
 
-/* появление при скролле */
-.ss-reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .3, 1);
+/* появление при скролле: скрываем только когда JS точно есть (класс ss-js ставится в <head>) */
+.ss-js .ss-reveal { opacity: 0; transform: translateY(28px); }
+.ss-js .ss-reveal.in { opacity: 1; transform: none; }
+/* без GSAP — запасной вариант на CSS-переходах */
+.ss-static .ss-reveal {
+  transition: opacity .7s ease, transform .7s var(--ease-out);
   transition-delay: var(--d, 0s);
 }
-.ss-reveal.in { opacity: 1; transform: none; }
+/* страховка: если скрипты не загрузились, контент всё равно покажется */
+html.ss-js:not(.ss-ready) .ss-reveal,
+html.ss-js:not(.ss-ready) .ss-line > span,
+html.ss-js:not(.ss-ready) [data-intro],
+html.ss-js:not(.ss-ready) .ss-float__in,
+html.ss-js:not(.ss-ready) .ss-hero__sunwrap { animation: ss-failsafe 0s 4s forwards; }
+html.ss-js:not(.ss-ready) .ss-hero__dusk { animation: ss-failsafe-hide 0s 4s forwards; }
+
+/* смена темы: круговое раскрытие от кнопки (View Transitions) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: ss-vt-reveal .75s cubic-bezier(.65, 0, .35, 1); }
+html.ss-vt, html.ss-vt * { transition: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
+  .ss-js .ss-reveal { opacity: 1; transform: none; }
 }

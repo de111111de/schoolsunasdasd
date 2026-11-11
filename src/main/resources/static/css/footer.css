@@ -1,29 +1,77 @@
 /* ---------- футер ---------- */
 .ss-footer {
-  margin-top: 76px;
+  margin-top: 96px;
   background: var(--sky-1);
-  color: #F7F1E4;
+  color: #F6EFE1;
   position: relative;
-  padding: 64px 22px 28px;
-  text-align: center;
+  overflow: hidden;
+  padding: 96px 24px 0;
 }
+:root[data-night] .ss-footer { background: #080D20; }
 .ss-footer .ss-wave { bottom: auto; top: -1px; transform: rotate(180deg); height: 70px; }
-.ss-footer__logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.ss-footer p { margin: 0; font-size: 13px; color: rgba(247, 241, 228, .75); }
-.ss-footer a { color: #FFD93D; }
+.ss-footer__grid {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px 48px;
+}
+.ss-footer__logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ss-footer p { margin: 0; font-size: 14px; color: rgba(246, 239, 225, .7); max-width: 38ch; }
+.ss-footer a { color: #FFD98A; }
+.ss-footer__links { display: flex; flex-wrap: wrap; gap: 8px 26px; font-weight: 600; font-size: 14.5px; }
+.ss-footer__links a { position: relative; text-decoration: none; padding: 4px 0; }
+.ss-footer__links a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .45s var(--ease-out);
+}
+.ss-footer__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.ss-footer__copy { max-width: 1160px; margin: 34px auto 0; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, .1); font-size: 12.5px; color: rgba(246, 239, 225, .5); }
+/* гигантская надпись, наполовину утопленная в край страницы */
+.ss-footer__mark {
+  margin: 18px 0 -.3em;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(38px, 10.4vw, 168px);
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 217, 138, .28);
+  background: linear-gradient(180deg, rgba(255, 213, 74, .2), transparent 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+  pointer-events: none;
+}
 
 /* ---------- ключевые кадры ---------- */
 @keyframes ss-spin { to { transform: rotate(360deg); } }
-@keyframes ss-rise { from { transform: translateY(130px) scale(.82); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes ss-float { to { transform: translateY(-12px); } }
 @keyframes ss-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .95; } }
 @keyframes ss-pfloat {
   0% { transform: translateY(0); opacity: 0; }
   12% { opacity: .85; }
   100% { transform: translateY(-480px); opacity: 0; }
 }
+@keyframes ss-beacon { 50% { box-shadow: 0 0 0 8px rgba(255, 213, 74, 0); } }
+@keyframes ss-marquee { to { transform: translateX(-50%); } }
 @keyframes ss-ripple { to { transform: scale(4); opacity: 0; } }
 @keyframes ss-shimmer { to { background-position: -200% 0; } }
-@keyframes ss-toast-in { from { transform: translateY(18px) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ss-toast-in { from { transform: translateY(18px) scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes ss-toast-out { to { transform: translateY(10px); opacity: 0; } }
 @keyframes ss-shine { 0%, 55% { transform: translateX(-130%); } 85%, 100% { transform: translateX(130%); } }
+@keyframes ss-failsafe { to { opacity: 1; transform: none; } }
+@keyframes ss-failsafe-hide { to { opacity: 0; } }
+@keyframes ss-vt-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0%)); }
+  to { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0%)); }
+}

@@ -5,23 +5,31 @@
   <svg class="ss-wave" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0,74 C240,112 480,18 720,52 C960,86 1200,26 1440,58 L1440,110 L0,110 Z" fill="var(--bg)"/>
   </svg>
-  <div class="ss-footer__logo">
-    <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
-      <g stroke="#FFB347" stroke-width="3.4" stroke-linecap="round">
-        <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
-        <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
-        <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
-        <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
-      </g>
-      <circle cx="32" cy="26" r="11" fill="#FFD93D"/>
-      <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="#FFF9F0"/>
-    </svg>
-    <span class="ss-logo__word" style="color:#FFF9F0">SCHOOL<b>SUN</b></span>
+  <div class="ss-footer__grid">
+    <div>
+      <div class="ss-footer__logo">
+        <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
+          <g stroke="#FFB347" stroke-width="3.4" stroke-linecap="round">
+            <line x1="49" y1="26" x2="56" y2="26"/><line x1="44" y1="14" x2="49" y2="9"/>
+            <line x1="32" y1="9" x2="32" y2="2"/><line x1="20" y1="14" x2="15" y2="9"/>
+            <line x1="15" y1="26" x2="8" y2="26"/><line x1="20" y1="38" x2="15" y2="43"/>
+            <line x1="32" y1="43" x2="32" y2="50"/><line x1="44" y1="38" x2="49" y2="43"/>
+          </g>
+          <circle cx="32" cy="26" r="11" fill="#FFD93D"/>
+          <path d="M9 45c8-4.6 15-4.6 23-.4 8-4.2 15-4.2 23 .4v7c-8-4.6-15-4.6-23-.4-8-4.2-15-4.2-23 .4z" fill="#FFF9F0"/>
+        </svg>
+        <span class="ss-logo__word" style="color:#FFF9F0">SCHOOL<b>SUN</b></span>
+      </div>
+      <p>Школа солнца: курсы для 5–11 классов с автопроверкой тестов, живым рейтингом и учителями рядом.</p>
+    </div>
+    <nav class="ss-footer__links" aria-label="Ссылки в подвале">
+      <a th:href="@{/courses}">Каталог курсов</a>
+      <a th:href="@{/register}">Регистрация</a>
+      <a th:href="@{/login}">Войти</a>
+    </nav>
   </div>
-  <p>© 2026 SCHOOLSUN — школа солнца. Учись на рассвете, свети ярче.</p>
-  <p class="ss-tiny" style="margin-top:6px">
-    <a th:href="@{/courses}">Каталог курсов</a> · <a th:href="@{/register}">Регистрация</a>
-  </p>
+  <p class="ss-footer__copy">© 2026 SCHOOLSUN. Учись на рассвете, свети ярче.</p>
+  <div class="ss-footer__mark" aria-hidden="true">SCHOOLSUN</div>
 </footer>
 
 <div class="ss-toasts" id="ss-toasts" aria-live="polite"></div>

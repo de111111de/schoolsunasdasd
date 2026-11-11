@@ -9,9 +9,9 @@
   <h1 class="ss-reveal" style="font-size:28px;margin-bottom:6px">Аналитика курса</h1>
 
   <div class="ss-counters ss-reveal" style="margin:20px 0 30px">
-    <div class="ss-counter"><b data-target="${analytics.studentsCount}">0</b><small>учеников на курсе</small></div>
-    <div class="ss-counter"><b data-target="${#lists.size(analytics.lessons)}">0</b><small>уроков</small></div>
-    <div class="ss-counter"><b data-target="${#lists.size(analytics.hardest)}">0</b><small>вопросов в топе сложных</small></div>
+    <div class="ss-counter"><b th:data-target="${analytics.studentsCount}">0</b><small>учеников на курсе</small></div>
+    <div class="ss-counter"><b th:data-target="${#lists.size(analytics.lessons)}">0</b><small>уроков</small></div>
+    <div class="ss-counter"><b th:data-target="${#lists.size(analytics.hardest)}">0</b><small>вопросов в топе сложных</small></div>
   </div>
 
   <section class="ss-reveal" style="margin-bottom:34px">
